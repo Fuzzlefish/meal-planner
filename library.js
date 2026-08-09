@@ -5,6 +5,19 @@ const cancelMealButton = document.querySelector("#cancelMealButton");
 const saveMealButton = document.querySelector("#saveMealButton");
 const mealList = document.querySelector("#mealList");
 
+const editMealModal = document.querySelector("#editMealModal");
+const editMealName = document.querySelector("#editMealName");
+const cancelEditButton = document.querySelector("#cancelEditButton");
+const saveEditButton = document.querySelector("#saveEditButton");
+
+const deleteMealModal = document.querySelector("#deleteMealModal");
+const deleteMealMessage = document.querySelector("#deleteMealMessage");
+const cancelDeleteButton = document.querySelector("#cancelDeleteButton");
+const confirmDeleteButton = document.querySelector("#confirmDeleteButton");
+
+let editingMealId = null;
+let deletingMealId = null;
+
 function saveMeals(meals) {
     localStorage.setItem("meals", JSON.stringify(meals));
 }
@@ -93,11 +106,19 @@ function displayMeals() {
         tagContainer.classList.add("mealTags");
 
         meal.tags.forEach((tag) => {
-            const tagElement = document.createElement("span");
-            tagElement.textContent = tag;
-            tagElement.classList.add("mealTagDisplay");
-            tagContainer.appendChild(tagElement);
-        });
+        const tagElement = document.createElement("span");
+
+        tagElement.textContent = tag;
+        tagElement.classList.add("mealTagDisplay");
+
+        const tagClass = tag
+            .toLowerCase()
+            .replace(/\s+/g, "-");
+
+        tagElement.classList.add(`tag-${tagClass}`);
+
+        tagContainer.appendChild(tagElement);
+    });
 
         mealItem.appendChild(tagContainer);
 
@@ -105,7 +126,7 @@ function displayMeals() {
         editButton.textContent = "Edit";
 
         editButton.addEventListener("click", () => {
-            editMeal(meal.id);
+            openEditModal(meal.id);
         });
 
         mealItem.appendChild(editButton);
@@ -114,7 +135,7 @@ function displayMeals() {
         deleteButton.textContent = "Delete";
 
         deleteButton.addEventListener("click", () => {
-            deleteMeal(meal.id);
+            openDeleteModal(meal.id);
         });
 
         mealItem.appendChild(deleteButton);
@@ -122,7 +143,7 @@ function displayMeals() {
     });
 }
 
-function editMeal(mealId) {
+function openEditModal(mealId) {
     const meals = getMeals();
     const meal = meals.find((meal) => meal.id === mealId);
 
@@ -130,31 +151,68 @@ function editMeal(mealId) {
         return;
     }
 
-    const newName = prompt("Enter new meal name:", meal.name);
+    editingMealId = mealId;
 
-    if (newName === null || newName.trim() === "") {
+    editMealName.value = meal.name;
+
+    const tagCheckboxes = document.querySelectorAll(".editMealTag");
+
+    tagCheckboxes.forEach((checkbox) => {
+        checkbox.checked = meal.tags.includes(checkbox.value);
+    });
+
+    editMealModal.style.display = "flex";
+    editMealName.focus();
+}
+
+cancelEditButton.addEventListener("click", () => {
+    editMealModal.style.display = "none";
+    editingMealId = null;
+});
+
+saveEditButton.addEventListener("click", () => {
+    if (!editingMealId) {
         return;
     }
 
-    meal.name = newName.trim();
+    const newName = editMealName.value.trim();
 
-    const newTags = prompt(
-        "Enter tags separated by commas:",
-        meal.tags.join(", ")
-    );
-
-    if (newTags !== null) {
-        meal.tags = newTags
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag !== "");
+    if (newName === "") {
+        alert("Please enter a meal name.");
+        return;
     }
+
+    const meals = getMeals();
+    const meal = meals.find((meal) => meal.id === editingMealId);
+
+    if (!meal) {
+        return;
+    }
+
+    meal.name = newName;
+    meal.tags = getEditTags();
 
     saveMeals(meals);
     displayMeals();
+
+    editMealModal.style.display = "none";
+    editingMealId = null;
+});
+
+function getEditTags() {
+    const checkboxes = document.querySelectorAll(".editMealTag");
+    const tags = [];
+
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            tags.push(checkbox.value);
+        }
+    });
+
+    return tags;
 }
 
-function deleteMeal(mealId) {
+function openDeleteModal(mealId) {
     const meals = getMeals();
     const meal = meals.find((meal) => meal.id === mealId);
 
@@ -162,17 +220,50 @@ function deleteMeal(mealId) {
         return;
     }
 
-    const confirmed = confirm(`Delete "${meal.name}"?`);
+    deletingMealId = mealId;
 
-    if (!confirmed) {
+    deleteMealMessage.textContent =
+        `Are you sure you want to delete "${meal.name}"?`;
+
+    deleteMealModal.style.display = "flex";
+}
+
+cancelDeleteButton.addEventListener("click", () => {
+    deleteMealModal.style.display = "none";
+    deletingMealId = null;
+});
+
+confirmDeleteButton.addEventListener("click", () => {
+    if (!deletingMealId) {
         return;
     }
 
-    const updatedMeals = meals.filter((meal) => meal.id !== mealId);
+    const meals = getMeals();
+
+    const updatedMeals = meals.filter(
+        (meal) => meal.id !== deletingMealId
+    );
 
     saveMeals(updatedMeals);
     displayMeals();
-}
+
+    deleteMealModal.style.display = "none";
+    deletingMealId = null;
+});
+
+editMealModal.addEventListener("click", (event) => {
+    if (event.target === editMealModal) {
+        editMealModal.style.display = "none";
+        editingMealId = null;
+    }
+});
+
+deleteMealModal.addEventListener("click", (event) => {
+    if (event.target === deleteMealModal) {
+        deleteMealModal.style.display = "none";
+        deletingMealId = null;
+    }
+});
 
 displayMeals();
 

@@ -102,11 +102,14 @@ function displayMeals() {
         button.textContent = meal.name;
 
         if (tags.length > 0) {
-            const tagText = document.createElement("small");
-            tagText.textContent = tags.join(" • ");
+            const tagContainer = document.createElement("div");
+            tagContainer.classList.add("mealTags");
 
-            button.appendChild(document.createElement("br"));
-            button.appendChild(tagText);
+            tags.forEach((tag) => {
+                tagContainer.appendChild(createTagElement(tag));
+            });
+
+            button.appendChild(tagContainer);
         }
 
         button.addEventListener("click", () => {
@@ -286,6 +289,22 @@ cancelMealButton.addEventListener("click", () => {
 function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+function createTagElement(tag) {
+    const tagElement = document.createElement("span");
+
+    tagElement.textContent = tag;
+    tagElement.classList.add("mealTagDisplay");
+
+    const tagClass = tag
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+
+    tagElement.classList.add(`tag-${tagClass}`);
+
+    return tagElement;
+}
+
 
 loadMealPlan();
 
