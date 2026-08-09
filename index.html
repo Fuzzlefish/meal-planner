@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Planner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Weekly Planner</h1>
+
+    <div class="header-buttons">
+        <a href="index.html"><button>Weekly Planner</button></a>
+        <a href="library.html"><button>Meal Library</button></a>
+    </div>
+
+    <div id="mealPlan">
+        <div class="day" id="monday">
+            <h2>Monday</h2>
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+
+        <div class="day" id="tuesday">
+            <h2>Tuesday</h2>
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+
+        <div class="day" id="wednesday">
+            <h2>Wednesday</h2>
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+
+        <div class="day" id="thursday">
+            <h2>Thursday</h2>
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+
+        <div class="day" id="friday">
+            <h2>Friday</h2>
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+
+        <div class="day" id="saturday">
+            <h2>Saturday</h2>
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+
+        <div class="day" id="sunday">
+            <h2>Sunday</h2>
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="mealModal" style="display: none;">
+        <div class="modalContent">
+            <h2>Add Meal</h2>
+            <p id="mealModalTitle"></p>
+
+            <div id="mealFilters">
+                <button class="filterButton" data-category="all">All</button>
+            </div>
+
+            <div id="availableMeals"></div>
+
+            <button id="cancelMealButton">Cancel</button>
+        </div>
+    </div>
+
+    <script src="planner.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Library</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Meal Library</h1>
+
+    <div class="header-buttons">
+        <a href="index.html"><button>Weekly Planner</button></a>
+        <a href="library.html"><button>Meal Library</button></a>
+    </div>
+
+    <button id="addMealButton">Add Meal</button>
+
+    <div id="addMealForm" style="display: none;">
+        <h2>Add New Meal</h2>
+
+        <input type="text" id="newMealName" placeholder="Enter Meal Name">
+
+        <h3>Tags</h3>
+
+        <label>
+            <input type="checkbox" class="mealTag" value="High Protein">
+            High Protein
+        </label>
+        <br>
+
+        <label>
+            <input type="checkbox" class="mealTag" value="Vegetarian">
+            Vegetarian
+        </label>
+        <br>
+
+        <label>
+            <input type="checkbox" class="mealTag" value="Cheap">
+            Cheap
+        </label>
+        <br>
+
+        <label>
+            <input type="checkbox" class="mealTag" value="Quick">
+            Quick
+        </label>
+        <br>
+
+        <label>
+            <input type="checkbox" class="mealTag" value="Family Favourite">
+            Family Favourite
+        </label>
+        <br><br>
+
+        <button id="cancelMealButton">Cancel</button>
+        <button id="saveMealButton">Save</button>
+    </div>
+
+    <h2>Your Meals</h2>
+    <div id="mealList"></div>
+
+    <script src="library.js"></script>
+</body>
+</html>
+
