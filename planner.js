@@ -21,29 +21,39 @@ function saveMealPlan(plan) {
     localStorage.setItem("mealPlan", JSON.stringify(plan));
 }
 
-mealPlan.addEventListener("click", (event) => {
-    if (!event.target.classList.contains("addMealButton")) {
+if (mealPlan) {
+    mealPlan.addEventListener("click", (event) => {
+        if (!event.target.classList.contains("addMealButton")) {
+            return;
+        }
+
+        const day = event.target.closest(".day");
+        const meal = event.target.closest(".meal");
+
+        if (!day || !meal) {
+            return;
+        }
+
+        selectedDay = day.id;
+        selectedMealType = meal.querySelector("h3").textContent;
+
+        mealModalTitle.textContent =
+            `Add Meal to ${capitalize(selectedDay)} ${selectedMealType}`;
+
+        selectedCategory = "all";
+
+        displayFilters();
+        displayMeals();
+
+        mealModal.style.display = "flex";
+    });
+}
+
+function displayFilters() {
+    if (!mealFilters) {
         return;
     }
 
-    const day = event.target.closest(".day");
-    const meal = event.target.closest(".meal");
-
-    selectedDay = day.id;
-    selectedMealType = meal.querySelector("h3").textContent;
-
-    mealModalTitle.textContent =
-        `Add Meal to ${capitalize(selectedDay)} ${selectedMealType}`;
-
-    selectedCategory = "all";
-
-    displayFilters();
-    displayMeals();
-
-    mealModal.style.display = "flex";
-});
-
-function displayFilters() {
     mealFilters.innerHTML = "";
 
     const allButton = document.createElement("button");
@@ -75,6 +85,10 @@ function displayFilters() {
 }
 
 function displayMeals() {
+    if (!availableMeals) {
+        return;
+    }
+
     availableMeals.innerHTML = "";
 
     const meals = getMeals();
@@ -120,19 +134,25 @@ function displayMeals() {
     });
 }
 
-mealFilters.addEventListener("click", (event) => {
-    if (!event.target.classList.contains("filterButton")) {
-        return;
-    }
+if (mealFilters) {
+    mealFilters.addEventListener("click", (event) => {
+        if (!event.target.classList.contains("filterButton")) {
+            return;
+        }
 
-    selectedCategory = event.target.dataset.category;
-    displayMeals();
-});
+        selectedCategory = event.target.dataset.category;
+        displayMeals();
+    });
+}
 
 function selectMeal(meal) {
     const day = document.querySelector(`#${selectedDay}`);
-    const mealSections = day.querySelectorAll(".meal");
 
+    if (!day) {
+        return;
+    }
+
+    const mealSections = day.querySelectorAll(".meal");
     let selectedMealSection = null;
 
     mealSections.forEach((section) => {
@@ -282,9 +302,11 @@ function displaySavedMeal(section, meal) {
     mealList.appendChild(listItem);
 }
 
-cancelMealButton.addEventListener("click", () => {
-    mealModal.style.display = "none";
-});
+if (cancelMealButton) {
+    cancelMealButton.addEventListener("click", () => {
+        mealModal.style.display = "none";
+    });
+}
 
 function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -305,6 +327,17 @@ function createTagElement(tag) {
     return tagElement;
 }
 
+document.querySelectorAll(".dayHeader").forEach((header) => {
+    header.addEventListener("click", () => {
+        const day = header.closest(".day");
+
+        if (!day) {
+            return;
+        }
+
+        day.classList.toggle("collapsed");
+    });
+});
 
 loadMealPlan();
 

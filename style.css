@@ -573,3 +573,36 @@ body[data-theme="red"] {
     background: #d7c0a7;
     color: #59412e;
 }
+
+
+.dayHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+}
+
+.dayArrow {
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.dayContent {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+    opacity: 1;
+}
+
+.day.collapsed .dayContent {
+    max-height: 0;
+    opacity: 0;
+}
+
+.day.collapsed .dayArrow {
+    transform: rotate(-90deg);
+}
+
+

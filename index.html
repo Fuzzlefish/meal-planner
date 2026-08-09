@@ -19,7 +19,7 @@
         <a href="library.html"><button>Meal Library</button></a>
     </div>
 
-    <button id="themeButton">Themes</button>
+     <button id="themeButton" aria-label="Change theme">🎨</button>
 
     <div id="themeOptions">
         <button data-theme="coffee">☕ Coffee</button>
@@ -30,98 +30,20 @@
         <button data-theme="red">🍷 Felicity</button>
     </div>
 
-    <div id="mealPlan">
-        <div class="day" id="monday">
-            <h2>Monday</h2>
-            <div class="meal">
-                <h3>Lunch</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-            <div class="meal">
-                <h3>Dinner</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-        </div>
+ 
+    <div class="day" id="monday">
+        <h2 class="dayHeader">
+            Monday
+            <span class="dayArrow">▼</span>
+        </h2>
 
-        <div class="day" id="tuesday">
-            <h2>Tuesday</h2>
+        <div class="dayContent">
             <div class="meal">
                 <h3>Lunch</h3>
                 <button class="addMealButton">Add Meal</button>
                 <ul></ul>
             </div>
-            <div class="meal">
-                <h3>Dinner</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-        </div>
 
-        <div class="day" id="wednesday">
-            <h2>Wednesday</h2>
-            <div class="meal">
-                <h3>Lunch</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-            <div class="meal">
-                <h3>Dinner</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-        </div>
-
-        <div class="day" id="thursday">
-            <h2>Thursday</h2>
-            <div class="meal">
-                <h3>Lunch</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-            <div class="meal">
-                <h3>Dinner</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-        </div>
-
-        <div class="day" id="friday">
-            <h2>Friday</h2>
-            <div class="meal">
-                <h3>Lunch</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-            <div class="meal">
-                <h3>Dinner</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-        </div>
-
-        <div class="day" id="saturday">
-            <h2>Saturday</h2>
-            <div class="meal">
-                <h3>Lunch</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-            <div class="meal">
-                <h3>Dinner</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
-        </div>
-
-        <div class="day" id="sunday">
-            <h2>Sunday</h2>
-            <div class="meal">
-                <h3>Lunch</h3>
-                <button class="addMealButton">Add Meal</button>
-                <ul></ul>
-            </div>
             <div class="meal">
                 <h3>Dinner</h3>
                 <button class="addMealButton">Add Meal</button>
@@ -129,6 +51,133 @@
             </div>
         </div>
     </div>
+
+    <div class="day collapsed" id="tuesday">
+        <h2 class="dayHeader">
+            Tuesday
+            <span class="dayArrow">▼</span>
+        </h2>
+
+        <div class="dayContent">
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="day collapsed" id="wednesday">
+        <h2 class="dayHeader">
+            Wednesday
+            <span class="dayArrow">▼</span>
+        </h2>
+
+        <div class="dayContent">
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="day collapsed" id="thursday">
+        <h2 class="dayHeader">
+            Thursday
+            <span class="dayArrow">▼</span>
+        </h2>
+
+        <div class="dayContent">
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="day collapsed" id="friday">
+        <h2 class="dayHeader">
+            Friday
+            <span class="dayArrow">▼</span>
+        </h2>
+
+        <div class="dayContent">
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="day collapsed" id="saturday">
+        <h2 class="dayHeader">
+            Saturday
+            <span class="dayArrow">▼</span>
+        </h2>
+
+        <div class="dayContent">
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="day collapsed" id="sunday">
+        <h2 class="dayHeader">
+            Sunday
+            <span class="dayArrow">▼</span>
+        </h2>
+
+        <div class="dayContent">
+            <div class="meal">
+                <h3>Lunch</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+
+            <div class="meal">
+                <h3>Dinner</h3>
+                <button class="addMealButton">Add Meal</button>
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
 
     <div id="mealModal" style="display: none;">
         <div class="modalContent">
