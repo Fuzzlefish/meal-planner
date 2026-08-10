@@ -3,105 +3,99 @@
 ========================================================= */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 /* =========================================================
    THEME VARIABLES
 ========================================================= */
 
 :root {
-    --background: #f5eee4;
-    --card: #fffaf3;
-    --secondary: #f8f0e5;
-    --text: #3e2c23;
-    --heading: #5a3d2e;
-    --button: #8b5e3c;
-    --button-hover: #70482f;
-    --border: #dfcdb9;
-    --tag: #d9bfa5;
-    --meal: #ead9c6;
-    --modal: rgba(48, 33, 25, 0.65);
+  --background: #f5eee4;
+  --card: #fffaf3;
+  --secondary: #f8f0e5;
+  --text: #3e2c23;
+  --heading: #5a3d2e;
+  --button: #8b5e3c;
+  --button-hover: #70482f;
+  --border: #dfcdb9;
+  --tag: #d9bfa5;
+  --meal: #ead9c6;
+  --modal: rgba(48, 33, 25, 0.65);
 }
-
 
 /* =========================================================
    BODY
 ========================================================= */
 
 body {
-    margin: 0;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    color: var(--text);
-    background: var(--background);
-    transition: 0.3s ease;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: var(--text);
+  background: var(--background);
+  transition: 0.3s ease;
 }
-
 
 /* =========================================================
    HEADINGS
 ========================================================= */
 
 h1 {
-    margin: 10px 0 20px;
-    color: var(--heading);
-    font-size: 2rem;
+  margin: 10px 0 20px;
+  color: var(--heading);
+  font-size: 2rem;
 }
 
 h2,
 h3 {
-    color: var(--heading);
+  color: var(--heading);
 }
-
 
 /* =========================================================
    BUTTONS
 ========================================================= */
 
 button {
-    border: 0;
-    border-radius: 12px;
-    padding: 12px 18px;
-    margin: 5px;
-    background: var(--button);
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.18);
-    transition: 0.2s ease;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin: 5px;
+  background: var(--button);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.18);
+  transition: 0.2s ease;
 }
 
 button:hover {
-    background: var(--button-hover);
-    transform: translateY(-1px);
+  background: var(--button-hover);
+  transform: translateY(-1px);
 }
 
 button:active {
-    transform: translateY(1px);
+  transform: translateY(1px);
 }
-
 
 /* =========================================================
    HEADER
 ========================================================= */
 
 .header-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 25px;
 }
 
 #mealPlan {
-    width: 100%;
-    max-width: 700px;
-    margin: auto;
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
 }
-
 
 /* =========================================================
    DAYS & MEALS
@@ -110,268 +104,261 @@ button:active {
 .day,
 .mealItem,
 #addMealForm {
-    background: var(--card);
-    border: 1px solid var(--border);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
 }
 
 .day {
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 18px;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 18px;
 }
 
 .day h2 {
-    margin: 5px 0 15px;
-    font-size: 1.5rem;
+  margin: 5px 0 15px;
+  font-size: 1.5rem;
 }
 
 .meal {
-    padding: 15px;
-    margin: 12px 0;
-    background: var(--secondary);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+  padding: 15px;
+  margin: 12px 0;
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
 }
 
 .meal h3,
 .mealItem h3 {
-    margin: 0 0 10px;
-    font-size: 1.15rem;
+  margin: 0 0 10px;
+  font-size: 1.15rem;
 }
 
 .meal ul {
-    padding: 0;
-    margin: 10px 0 0;
-    list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  list-style: none;
 }
 
 .meal li {
-    padding: 12px;
-    margin: 8px 0;
-    background: var(--meal);
-    border-radius: 10px;
-    font-weight: 600;
+  padding: 12px;
+  margin: 8px 0;
+  background: var(--meal);
+  border-radius: 10px;
+  font-weight: 600;
 }
 
 .mealItem {
-    width: 100%;
-    max-width: 600px;
-    padding: 18px;
-    margin: 12px auto;
-    border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  padding: 18px;
+  margin: 12px auto;
+  border-radius: 16px;
 }
 
 .removeMealButton {
-    padding: 8px 12px;
-    background: var(--button-hover);
-    font-size: 0.9rem;
+  padding: 8px 12px;
+  background: var(--button-hover);
+  font-size: 0.9rem;
 }
 
 .removeMealButton:hover {
-    background: var(--button);
+  background: var(--button);
 }
-
 
 /* =========================================================
    ADD / EDIT MEAL FORMS
 ========================================================= */
 
 #addMealForm {
-    width: 100%;
-    max-width: 500px;
-    padding: 25px;
-    margin: 20px auto;
-    border-radius: 18px;
+  width: 100%;
+  max-width: 500px;
+  padding: 25px;
+  margin: 20px auto;
+  border-radius: 18px;
 }
 
 #newMealName,
 #editMealName {
-    width: 100%;
-    min-height: 52px;
-    padding: 15px;
-    margin: 10px 0 18px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    outline: 0;
-    background: var(--card);
-    color: var(--text);
-    font-size: 1rem;
+  width: 100%;
+  min-height: 52px;
+  padding: 15px;
+  margin: 10px 0 18px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  outline: 0;
+  background: var(--card);
+  color: var(--text);
+  font-size: 1rem;
 }
 
 #newMealName:focus,
 #editMealName:focus {
-    border-color: var(--button);
+  border-color: var(--button);
 }
-
 
 /* =========================================================
    MEAL TAGS
 ========================================================= */
 
 .mealTags {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .mealTagDisplay {
-    display: inline-block;
-    padding: 6px 10px;
-    margin: 3px;
-    background: var(--tag);
-    color: var(--text);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
+  display: inline-block;
+  padding: 6px 10px;
+  margin: 3px;
+  background: var(--tag);
+  color: var(--text);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .tagSection {
-    width: 100%;
-    max-width: 520px;
-    margin: 20px auto;
+  width: 100%;
+  max-width: 520px;
+  margin: 20px auto;
 }
 
 .tagToggle {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 15px;
-    margin: 0;
-    cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  margin: 0;
+  cursor: pointer;
 }
 
 .tagOptions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .tagOptions.collapsed {
-    display: none;
+  display: none;
 }
 
 .tagOptions label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    background: var(--card);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--card);
 }
 
 #editMealTags {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
 }
 
 #editMealTags label {
-    width: 100%;
-    padding: 10px;
-    margin: 3px 0;
-    text-align: left;
-    background: var(--secondary);
-    border-radius: 10px;
+  width: 100%;
+  padding: 10px;
+  margin: 3px 0;
+  text-align: left;
+  background: var(--secondary);
+  border-radius: 10px;
 }
-
 
 /* =========================================================
    CHECKBOXES & LABELS
 ========================================================= */
 
 input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-    accent-color: var(--button);
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  accent-color: var(--button);
 }
 
 label {
-    display: inline-block;
-    padding: 6px;
-    color: var(--text);
-    font-size: 1rem;
+  display: inline-block;
+  padding: 6px;
+  color: var(--text);
+  font-size: 1rem;
 }
-
 
 /* =========================================================
    INGREDIENTS
 ========================================================= */
 
 .ingredientsSection {
-    width: 100%;
-    max-width: 520px;
-    margin: 20px auto;
-    text-align: center;
+  width: 100%;
+  max-width: 520px;
+  margin: 20px auto;
+  text-align: center;
 }
 
 .ingredientsSection h3 {
-    margin: 0 0 12px;
-    text-align: center;
+  margin: 0 0 12px;
+  text-align: center;
 }
-
 
 /* ---------------------------------------------------------
    Ingredient Row - Desktop
 --------------------------------------------------------- */
 
 .ingredientRow {
-    display: grid;
-    grid-template-columns: 75px 80px minmax(0, 1fr) 44px;
-    gap: 6px;
-    width: 100%;
-    margin: 8px 0;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 75px 80px minmax(0, 1fr) 44px;
+  gap: 6px;
+  width: 100%;
+  margin: 8px 0;
+  align-items: center;
 }
 
 .ingredientRow input,
 .ingredientRow select {
-    width: 100%;
-    min-width: 0;
-    min-height: 46px;
-    padding: 10px;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    background: var(--card);
-    color: var(--text);
-    font-size: 0.95rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.95rem;
 }
 
 .ingredientRow input:focus,
 .ingredientRow select:focus {
-    outline: none;
-    border-color: var(--button);
+  outline: none;
+  border-color: var(--button);
 }
 
 .ingredientRow input::placeholder {
-    color: var(--text);
-    opacity: 0.65;
+  color: var(--text);
+  opacity: 0.65;
 }
-
 
 /* ---------------------------------------------------------
    Remove Ingredient Button
 --------------------------------------------------------- */
 
 .removeIngredientButton {
-    width: 44px;
-    min-height: 46px;
-    padding: 5px;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--button-hover);
+  width: 44px;
+  min-height: 46px;
+  padding: 5px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--button-hover);
 }
 
 .removeIngredientButton:hover {
-    background: var(--button);
+  background: var(--button);
 }
-
 
 /* ---------------------------------------------------------
    Add Ingredient Buttons
@@ -379,33 +366,31 @@ label {
 
 #addIngredientButton,
 #addEditIngredientButton {
-    width: 100%;
-    margin: 10px 0 0;
+  width: 100%;
+  margin: 10px 0 0;
 }
-
 
 /* ---------------------------------------------------------
    Ingredients Viewing Modal
 --------------------------------------------------------- */
 
 #ingredientsList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin: 20px auto;
 }
 
 .ingredientDisplay {
-    width: 100%;
-    padding: 13px 15px;
-    background: var(--secondary);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    text-align: left;
-    font-weight: 600;
+  width: 100%;
+  padding: 13px 15px;
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-align: left;
+  font-weight: 600;
 }
-
 
 /* =========================================================
    MODALS
@@ -413,38 +398,37 @@ label {
 
 #mealModal,
 .mealModal {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: var(--modal);
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--modal);
 }
 
 .modalContent,
 .mealModal .modalContent {
-    width: 100%;
-    max-width: 450px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 25px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 25px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
 }
 
 .modalContent h2 {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 #mealModalTitle {
-    color: var(--heading);
-    font-size: 1rem;
+  color: var(--heading);
+  font-size: 1rem;
 }
-
 
 /* =========================================================
    MEAL FILTERS
@@ -452,515 +436,723 @@ label {
 
 #mealFilters,
 #themeOptions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
 }
 
 #mealFilters {
-    margin: 18px 0;
+  margin: 18px 0;
 }
 
 .filterButton {
-    padding: 9px 14px;
-    background: var(--tag);
-    color: var(--text);
-    border-radius: 20px;
-    box-shadow: none;
+  padding: 9px 14px;
+  background: var(--tag);
+  color: var(--text);
+  border-radius: 20px;
+  box-shadow: none;
 }
 
 .filterButton:hover {
-    background: var(--button);
-    color: white;
+  background: var(--button);
+  color: white;
 }
-
 
 /* =========================================================
    AVAILABLE MEALS
 ========================================================= */
 
 #availableMeals {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 18px 0;
 }
 
 .availableMealButton {
-    width: 100%;
-    padding: 15px;
-    margin: 0;
-    text-align: left;
-    background: var(--meal);
-    color: var(--text);
-    border: 1px solid var(--border);
+  width: 100%;
+  padding: 15px;
+  margin: 0;
+  text-align: left;
+  background: var(--meal);
+  color: var(--text);
+  border: 1px solid var(--border);
 }
 
 .availableMealButton:hover {
-    background: var(--tag);
-    color: var(--text);
+  background: var(--tag);
+  color: var(--text);
 }
 
 .availableMealButton small {
-    display: block;
-    margin-top: 4px;
-    color: var(--heading);
-    font-weight: normal;
+  display: block;
+  margin-top: 4px;
+  color: var(--heading);
+  font-weight: normal;
 }
-
 
 /* =========================================================
    THEME BUTTON
 ========================================================= */
 
 #themeButton {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
-    margin: 0;
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  margin: 0;
 }
 
 #themeOptions {
-    position: fixed;
-    top: 70px;
-    right: 15px;
-    z-index: 1000;
-    display: none;
-    width: 180px;
-    padding: 10px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  position: fixed;
+  top: 70px;
+  right: 15px;
+  z-index: 1000;
+  display: none;
+  width: 180px;
+  padding: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
 #themeOptions button {
-    width: 100%;
-    margin: 4px 0;
+  width: 100%;
+  margin: 4px 0;
 }
 
 #themeOptions button.active {
-    border: 2px solid var(--text);
+  border: 2px solid var(--text);
 }
-
 
 /* =========================================================
    MODAL BUTTONS
 ========================================================= */
 
 .modalButtons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .modalButtons button {
-    flex: 1;
+  flex: 1;
 }
 
 #cancelMealButton {
-    background: var(--button-hover);
+  background: var(--button-hover);
 }
 
 #confirmDeleteButton {
-    background: #a84d45;
+  background: #a84d45;
 }
 
 #confirmDeleteButton:hover {
-    background: #863c36;
+  background: #863c36;
 }
-
 
 /* =========================================================
    COLLAPSIBLE DAYS
 ========================================================= */
 
 .dayHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0;
-    cursor: pointer;
-    user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
 }
 
 .dayArrow {
-    font-size: 0.9rem;
-    transition: transform 0.2s ease;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
 }
 
 .dayContent {
-    max-height: 1000px;
-    overflow: hidden;
-    opacity: 1;
-    transition:
-        max-height 0.3s ease,
-        opacity 0.2s ease;
+  max-height: 1000px;
+  overflow: hidden;
+  opacity: 1;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease;
 }
 
 .day.collapsed .dayContent {
-    max-height: 0;
-    opacity: 0;
+  max-height: 0;
+  opacity: 0;
 }
 
 .day.collapsed .dayArrow {
-    transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
-
 
 /* =========================================================
    TAG COLOURS
 ========================================================= */
 
 .tag-vegetarian {
-    background: #c9dfc5;
-    color: #315437;
+  background: #c9dfc5;
+  color: #315437;
 }
 
 .tag-cheap {
-    background: #f0d99a;
-    color: #6b5318;
+  background: #f0d99a;
+  color: #6b5318;
 }
 
 .tag-quick {
-    background: #f3c79b;
-    color: #71431d;
+  background: #f3c79b;
+  color: #71431d;
 }
 
 .tag-high-protein {
-    background: #e5aaa4;
-    color: #6b2924;
+  background: #e5aaa4;
+  color: #6b2924;
 }
 
 .tag-healthy {
-    background: #b9dcd3;
-    color: #24584e;
+  background: #b9dcd3;
+  color: #24584e;
 }
 
 .tag-freezer-friendly {
-    background: #b9d5e5;
-    color: #28546b;
+  background: #b9d5e5;
+  color: #28546b;
 }
 
 .tag-spicy {
-    background: #e9aaa0;
-    color: #702b24;
+  background: #e9aaa0;
+  color: #702b24;
 }
 
 .tag-family-friendly {
-    background: #d4c1df;
-    color: #533d63;
+  background: #d4c1df;
+  color: #533d63;
 }
 
 .tag-one-pot {
-    background: #d7c0a7;
-    color: #59412e;
+  background: #d7c0a7;
+  color: #59412e;
 }
-
 
 /* =========================================================
    THEMES
 ========================================================= */
 
 body[data-theme="coffee"] {
-    --background: #f5eee4;
-    --card: #fffaf3;
-    --secondary: #f8f0e5;
-    --text: #3e2c23;
-    --heading: #5a3d2e;
-    --button: #8b5e3c;
-    --button-hover: #70482f;
-    --border: #dfcdb9;
-    --tag: #d9bfa5;
-    --meal: #ead9c6;
-    --modal: rgba(48, 33, 25, 0.65);
+  --background: #f5eee4;
+  --card: #fffaf3;
+  --secondary: #f8f0e5;
+  --text: #3e2c23;
+  --heading: #5a3d2e;
+  --button: #8b5e3c;
+  --button-hover: #70482f;
+  --border: #dfcdb9;
+  --tag: #d9bfa5;
+  --meal: #ead9c6;
+  --modal: rgba(48, 33, 25, 0.65);
 }
 
 body[data-theme="sage"] {
-    --background: #edf1e8;
-    --card: #f8faf5;
-    --secondary: #e5ebdf;
-    --text: #304236;
-    --heading: #435c49;
-    --button: #69866d;
-    --button-hover: #506c56;
-    --border: #c9d5c5;
-    --tag: #c7d5c3;
-    --meal: #dce7d8;
-    --modal: rgba(35, 48, 38, 0.65);
+  --background: #edf1e8;
+  --card: #f8faf5;
+  --secondary: #e5ebdf;
+  --text: #304236;
+  --heading: #435c49;
+  --button: #69866d;
+  --button-hover: #506c56;
+  --border: #c9d5c5;
+  --tag: #c7d5c3;
+  --meal: #dce7d8;
+  --modal: rgba(35, 48, 38, 0.65);
 }
 
 body[data-theme="ocean"] {
-    --background: #e8f1f3;
-    --card: #f7fbfc;
-    --secondary: #deebef;
-    --text: #263e46;
-    --heading: #365c67;
-    --button: #527f8c;
-    --button-hover: #3d6570;
-    --border: #c2d7dc;
-    --tag: #c5dce1;
-    --meal: #d5e7eb;
-    --modal: rgba(30, 48, 54, 0.65);
+  --background: #e8f1f3;
+  --card: #f7fbfc;
+  --secondary: #deebef;
+  --text: #263e46;
+  --heading: #365c67;
+  --button: #527f8c;
+  --button-hover: #3d6570;
+  --border: #c2d7dc;
+  --tag: #c5dce1;
+  --meal: #d5e7eb;
+  --modal: rgba(30, 48, 54, 0.65);
 }
 
 body[data-theme="berry"] {
-    --background: #f4e8eb;
-    --card: #fff8fa;
-    --secondary: #f1dfe4;
-    --text: #4a3038;
-    --heading: #704554;
-    --button: #a45f72;
-    --button-hover: #86495b;
-    --border: #dec3cb;
-    --tag: #e2c2cb;
-    --meal: #efd5dc;
-    --modal: rgba(55, 30, 39, 0.65);
+  --background: #f4e8eb;
+  --card: #fff8fa;
+  --secondary: #f1dfe4;
+  --text: #4a3038;
+  --heading: #704554;
+  --button: #a45f72;
+  --button-hover: #86495b;
+  --border: #dec3cb;
+  --tag: #e2c2cb;
+  --meal: #efd5dc;
+  --modal: rgba(55, 30, 39, 0.65);
 }
 
 body[data-theme="night"] {
-    --background: #28211d;
-    --card: #382d27;
-    --secondary: #43362f;
-    --text: #f2e6d8;
-    --heading: #f0d0a9;
-    --button: #a9794e;
-    --button-hover: #c08c5d;
-    --border: #5b493d;
-    --tag: #665143;
-    --meal: #514137;
-    --modal: rgba(10, 8, 7, 0.75);
+  --background: #28211d;
+  --card: #382d27;
+  --secondary: #43362f;
+  --text: #f2e6d8;
+  --heading: #f0d0a9;
+  --button: #a9794e;
+  --button-hover: #c08c5d;
+  --border: #5b493d;
+  --tag: #665143;
+  --meal: #514137;
+  --modal: rgba(10, 8, 7, 0.75);
 }
 
 body[data-theme="red"] {
-    --background: #321c1c;
-    --card: #452323;
-    --secondary: #512929;
-    --text: #f3dfd8;
-    --heading: #f0b6a8;
-    --button: #984b43;
-    --button-hover: #b65b51;
-    --border: #70403c;
-    --tag: #71413d;
-    --meal: #633633;
-    --modal: rgba(15, 7, 7, 0.75);
+  --background: #321c1c;
+  --card: #452323;
+  --secondary: #512929;
+  --text: #f3dfd8;
+  --heading: #f0b6a8;
+  --button: #984b43;
+  --button-hover: #b65b51;
+  --border: #70403c;
+  --tag: #71413d;
+  --meal: #633633;
+  --modal: rgba(15, 7, 7, 0.75);
 }
 
+/* =========================================================
+   WEEK PRESETS
+========================================================= */
+
+.plannerControls {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 25px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.plannerControls button {
+  margin: 0;
+}
+
+/* =========================================================
+   PRESET INPUTS
+========================================================= */
+
+#presetNameInput,
+#renamePresetInput {
+  width: 100%;
+  min-height: 52px;
+  padding: 15px;
+  margin: 15px 0;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  background: var(--card);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+#presetNameInput:focus,
+#renamePresetInput:focus {
+  border-color: var(--button);
+}
+
+/* =========================================================
+   PRESET MODAL
+========================================================= */
+
+.presetModalContent {
+  max-width: 650px;
+}
+
+/* =========================================================
+   PRESET LIST
+========================================================= */
+
+#presetsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+/* =========================================================
+   PRESET CARD
+========================================================= */
+
+.presetCard {
+  width: 100%;
+  padding: 18px;
+  text-align: left;
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+}
+
+.presetCard h3 {
+  margin: 0 0 4px;
+}
+
+.presetCard > small {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--heading);
+  opacity: 0.8;
+}
+
+/* =========================================================
+   PRESET SUMMARY
+========================================================= */
+
+.presetSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.presetDay {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+
+.presetDay strong {
+  color: var(--heading);
+}
+
+.presetMeal {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+}
+
+.presetMealType {
+  color: var(--heading);
+  font-weight: 700;
+}
+
+.presetMeal span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyPresetMeal {
+  opacity: 0.55;
+  font-style: italic;
+}
+
+/* =========================================================
+   PRESET ACTIONS
+========================================================= */
+
+.presetActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.presetActions button {
+  margin: 0;
+  padding: 9px 13px;
+  font-size: 0.9rem;
+}
+
+.secondaryPresetButton {
+  background: var(--tag);
+  color: var(--text);
+  box-shadow: none;
+}
+
+.secondaryPresetButton:hover {
+  background: var(--button);
+  color: white;
+}
+
+.dangerPresetButton {
+  background: #a84d45;
+}
+
+.dangerPresetButton:hover {
+  background: #863c36;
+}
+
+/* =========================================================
+   DELETED MEALS
+========================================================= */
+
+.deletedMealItem {
+  background: var(--meal);
+}
+
+.deletedMealTag {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 4px 8px;
+  background: #a84d45;
+  color: white;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.deletedMealItem .removeMealButton {
+  margin-top: 8px;
+}
 
 /* =========================================================
    MOBILE
 ========================================================= */
 
 @media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
 
-    body {
-        padding: 12px;
-    }
+  h1 {
+    font-size: 1.7rem;
+  }
 
-    h1 {
-        font-size: 1.7rem;
-    }
+  button {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
 
-    button {
-        min-height: 48px;
-        padding: 12px 16px;
-    }
+  /* -----------------------------------------------------
+     Header
+  ----------------------------------------------------- */
 
+  .header-buttons {
+    width: 100%;
+  }
 
-    /* -----------------------------------------------------
-       Header
-    ----------------------------------------------------- */
+  .header-buttons a {
+    flex: 1;
+  }
 
-    .header-buttons {
-        width: 100%;
-    }
+  .header-buttons button {
+    width: 100%;
+    margin: 0;
+  }
 
-    .header-buttons a {
-        flex: 1;
-    }
+  /* -----------------------------------------------------
+     Planner Controls
+  ----------------------------------------------------- */
 
-    .header-buttons button {
-        width: 100%;
-        margin: 0;
-    }
+  .plannerControls {
+    flex-direction: column;
+    gap: 6px;
+  }
 
+  .plannerControls button {
+    width: 100%;
+  }
 
-    /* -----------------------------------------------------
-       Days & Meals
-    ----------------------------------------------------- */
+  /* -----------------------------------------------------
+     Days & Meals
+  ----------------------------------------------------- */
 
-    .day {
-        padding: 15px;
-        margin: 15px auto;
-        border-radius: 16px;
-    }
+  .day {
+    padding: 15px;
+    margin: 15px auto;
+    border-radius: 16px;
+  }
 
-    .meal {
-        padding: 14px 10px;
-    }
+  .meal {
+    padding: 14px 10px;
+  }
 
-    .meal .addMealButton {
-        width: 100%;
-        margin: 5px 0;
-    }
+  .meal .addMealButton {
+    width: 100%;
+    margin: 5px 0;
+  }
 
-    .mealItem {
-        padding: 15px;
-    }
+  .mealItem {
+    padding: 15px;
+  }
 
+  /* -----------------------------------------------------
+     Forms
+  ----------------------------------------------------- */
 
-    /* -----------------------------------------------------
-       Forms
-    ----------------------------------------------------- */
+  #addMealForm {
+    padding: 20px;
+  }
 
-    #addMealForm {
-        padding: 20px;
-    }
+  #newMealName {
+    min-height: 54px;
+    font-size: 1.05rem;
+  }
 
-    #newMealName {
-        min-height: 54px;
-        font-size: 1.05rem;
-    }
+  /* -----------------------------------------------------
+     Presets
+  ----------------------------------------------------- */
 
+  .presetModalContent {
+    max-width: 100%;
+  }
 
-    /* -----------------------------------------------------
-       Modals
-    ----------------------------------------------------- */
+  .presetCard {
+    padding: 14px;
+  }
 
-    .modalContent,
-    .mealModal .modalContent {
-        padding: 20px;
-        max-height: 90vh;
-    }
+  .presetDay {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
 
-    #mealModal,
-    .mealModal {
-        padding: 12px;
-    }
+  .presetDay strong {
+    margin-bottom: 2px;
+  }
 
+  .presetMeal {
+    padding-left: 5px;
+  }
 
-    /* -----------------------------------------------------
-       Tags
-    ----------------------------------------------------- */
+  .presetActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 
-    .tagOptions {
-        grid-template-columns: 1fr;
-    }
+  .presetActions button {
+    width: 100%;
+  }
 
-    #editMealTags label {
-        display: flex;
-        align-items: center;
-        min-height: 48px;
-    }
+  /* -----------------------------------------------------
+     Modals
+  ----------------------------------------------------- */
 
+  .modalContent,
+  .mealModal .modalContent {
+    padding: 20px;
+    max-height: 90vh;
+  }
 
-    /* -----------------------------------------------------
-       INGREDIENTS - MOBILE
+  #mealModal,
+  .mealModal {
+    padding: 12px;
+  }
 
-       Layout:
+  /* -----------------------------------------------------
+     Tags
+  ----------------------------------------------------- */
 
-       [ Ingredient name              ]
-       [ Amount ] [ Unit ]        [ X ]
+  .tagOptions {
+    grid-template-columns: 1fr;
+  }
 
-       This prevents four controls being
-       squeezed onto one line.
-    ----------------------------------------------------- */
+  #editMealTags label {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+  }
 
-    .ingredientsSection {
-        width: 100%;
-        margin: 18px auto;
-    }
+  /* -----------------------------------------------------
+     Ingredients
+  ----------------------------------------------------- */
 
-    .ingredientRow {
-        display: grid;
-        grid-template-columns: 1fr 75px 42px;
+  .ingredientsSection {
+    width: 100%;
+    margin: 18px auto;
+  }
 
-        grid-template-areas:
-            "name name remove"
-            "amount unit remove";
+  .ingredientRow {
+    display: grid;
+    grid-template-columns: 1fr 75px 42px;
+    grid-template-areas:
+      "name name remove"
+      "amount unit remove";
+    gap: 6px;
+    width: 100%;
+    padding: 10px;
+    margin: 12px 0;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
 
-        gap: 6px;
+  .ingredientRow input,
+  .ingredientRow select {
+    min-height: 46px;
+    padding: 9px;
+    font-size: 0.9rem;
+    border-radius: 9px;
+  }
 
-        width: 100%;
-        padding: 10px;
-        margin: 12px 0;
+  .ingredientRow input[type="text"] {
+    grid-area: name;
+  }
 
-        background: var(--secondary);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-    }
+  .ingredientRow input[type="number"] {
+    grid-area: amount;
+  }
 
-    .ingredientRow input,
-    .ingredientRow select {
-        min-height: 46px;
-        padding: 9px;
-        font-size: 0.9rem;
-        border-radius: 9px;
-    }
+  .ingredientRow select {
+    grid-area: unit;
+  }
 
-    /* Ingredient name */
-    .ingredientRow input[type="text"] {
-        grid-area: name;
-    }
+  .ingredientRow .removeIngredientButton {
+    grid-area: remove;
+    align-self: center;
+    width: 42px;
+    height: 46px;
+    min-height: 46px;
+    padding: 0;
+    margin: 0;
+    border-radius: 9px;
+    font-size: 1.25rem;
+  }
 
-    /* Amount */
-    .ingredientRow input[type="number"] {
-        grid-area: amount;
-    }
+  #addIngredientButton,
+  #addEditIngredientButton {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+  }
 
-    /* Unit */
-    .ingredientRow select {
-        grid-area: unit;
-    }
+  /* -----------------------------------------------------
+     Theme Options
+  ----------------------------------------------------- */
 
-    /* Remove ingredient */
-    .ingredientRow .removeIngredientButton {
-        grid-area: remove;
-        align-self: center;
+  #themeOptions button {
+    flex: 1 1 40%;
+  }
 
-        width: 42px;
-        height: 46px;
-        min-height: 46px;
+  /* -----------------------------------------------------
+     Modal Buttons
+  ----------------------------------------------------- */
 
-        padding: 0;
-        margin: 0;
+  .modalButtons {
+    flex-direction: column;
+  }
 
-        border-radius: 9px;
-        font-size: 1.25rem;
-    }
-
-    /* Add ingredient */
-    #addIngredientButton,
-    #addEditIngredientButton {
-        width: 100%;
-        min-height: 48px;
-        margin-top: 8px;
-    }
-
-
-    /* -----------------------------------------------------
-       Theme Options
-    ----------------------------------------------------- */
-
-    #themeOptions button {
-        flex: 1 1 40%;
-    }
-
-
-    /* -----------------------------------------------------
-       Modal Buttons
-    ----------------------------------------------------- */
-
-    .modalButtons {
-        flex-direction: column;
-    }
-
-    .modalButtons button {
-        width: 100%;
-        margin: 4px 0;
-    }
+  .modalButtons button {
+    width: 100%;
+    margin: 4px 0;
+  }
 }
 
