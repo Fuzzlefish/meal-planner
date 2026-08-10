@@ -138,6 +138,7 @@ function addIngredientRow(container, ingredient = {}) {
     const row = document.createElement("div");
     row.className = "ingredientRow";
 
+    /* Amount */
     const amount = document.createElement("input");
 
     amount.type = "number";
@@ -147,6 +148,7 @@ function addIngredientRow(container, ingredient = {}) {
     amount.value = ingredient.amount || "";
 
 
+    /* Unit */
     const unit = document.createElement("select");
 
     ingredientUnits.forEach((unitName) => {
@@ -161,6 +163,7 @@ function addIngredientRow(container, ingredient = {}) {
     unit.value = ingredient.unit || "";
 
 
+    /* Ingredient name */
     const name = document.createElement("input");
 
     name.type = "text";
@@ -168,12 +171,12 @@ function addIngredientRow(container, ingredient = {}) {
     name.value = ingredient.name || "";
 
 
+    /* Remove button */
     const remove = document.createElement("button");
 
     remove.type = "button";
     remove.className = "removeIngredientButton";
     remove.textContent = "×";
-
 
     remove.addEventListener("click", () => {
         row.remove();
@@ -249,17 +252,20 @@ function createTagElement(tag) {
    COLLAPSIBLE TAGS
 ========================= */
 
-// ADD MEAL TAGS
+/* ADD MEAL TAGS */
 
-const tagsToggle = document.querySelector("#toggleTagsButton");
-const tagsSection = document.querySelector("#mealTags");
-const tagArrow = document.querySelector("#tagArrow");
+const tagsToggle =
+    document.querySelector("#toggleTagsButton");
+
+const tagsSection =
+    document.querySelector("#mealTags");
+
+const tagArrow =
+    document.querySelector("#tagArrow");
 
 
 if (tagsToggle && tagsSection) {
-
     tagsToggle.addEventListener("click", () => {
-
         const collapsed =
             tagsSection.classList.toggle("collapsed");
 
@@ -267,13 +273,11 @@ if (tagsToggle && tagsSection) {
             tagArrow.textContent =
                 collapsed ? "▶" : "▼";
         }
-
     });
-
 }
 
 
-// EDIT MEAL TAGS
+/* EDIT MEAL TAGS */
 
 const editTagsToggle =
     document.querySelector("#toggleEditTagsButton");
@@ -286,9 +290,7 @@ const editTagArrow =
 
 
 if (editTagsToggle && editTagsSection) {
-
     editTagsToggle.addEventListener("click", () => {
-
         const collapsed =
             editTagsSection.classList.toggle("collapsed");
 
@@ -296,9 +298,7 @@ if (editTagsToggle && editTagsSection) {
             editTagArrow.textContent =
                 collapsed ? "▶" : "▼";
         }
-
     });
-
 }
 
 
@@ -307,14 +307,12 @@ if (editTagsToggle && editTagsSection) {
 ========================= */
 
 function displayMeals() {
-
     mealList.innerHTML = "";
 
     const meals = getMeals();
 
 
     if (meals.length === 0) {
-
         const message = document.createElement("p");
 
         message.textContent =
@@ -327,7 +325,6 @@ function displayMeals() {
 
 
     meals.forEach((meal) => {
-
         const mealItem =
             document.createElement("div");
 
@@ -347,11 +344,9 @@ function displayMeals() {
 
 
         (meal.tags || []).forEach((tag) => {
-
             tagContainer.appendChild(
                 createTagElement(tag)
             );
-
         });
 
 
@@ -386,14 +381,11 @@ function displayMeals() {
 
 
         mealList.appendChild(mealItem);
-
     });
-
 }
 
 
 function createButton(text, action) {
-
     const button =
         document.createElement("button");
 
@@ -414,7 +406,6 @@ function createButton(text, action) {
 ========================= */
 
 function openEditModal(mealId) {
-
     const meal =
         getMeals().find(
             (meal) => meal.id === mealId
@@ -431,35 +422,32 @@ function openEditModal(mealId) {
     editMealName.value = meal.name;
 
 
+    /* Restore selected tags */
     document
         .querySelectorAll(".editMealTag")
         .forEach((checkbox) => {
-
             checkbox.checked =
                 (meal.tags || [])
                     .includes(checkbox.value);
-
         });
 
 
+    /* Restore ingredients */
     editMealIngredients.innerHTML = "";
-
 
     (meal.ingredients || []).forEach(
         (ingredient) => {
-
             addIngredientRow(
                 editMealIngredients,
                 ingredient
             );
-
         }
     );
 
 
-    // Reset edit tags to open
-    if (editMealTagsSection) {
-        editMealTagsSection.classList.remove("collapsed");
+    /* Reset edit tags to open */
+    if (editTagsSection) {
+        editTagsSection.classList.remove("collapsed");
     }
 
     if (editTagArrow) {
@@ -490,7 +478,6 @@ cancelEditButton?.addEventListener(
 
 
 function closeEditModal() {
-
     editMealModal.style.display = "none";
 
     editingMealId = null;
@@ -500,7 +487,6 @@ function closeEditModal() {
 saveEditButton?.addEventListener(
     "click",
     () => {
-
         if (!editingMealId) {
             return;
         }
@@ -511,9 +497,7 @@ saveEditButton?.addEventListener(
 
 
         if (!newName) {
-
             alert("Please enter a meal name.");
-
             return;
         }
 
@@ -546,7 +530,6 @@ saveEditButton?.addEventListener(
         displayMeals();
 
         closeEditModal();
-
     }
 );
 
@@ -556,7 +539,6 @@ saveEditButton?.addEventListener(
 ========================= */
 
 function openDeleteModal(mealId) {
-
     const meal =
         getMeals().find(
             (meal) => meal.id === mealId
@@ -588,7 +570,6 @@ cancelDeleteButton?.addEventListener(
 
 
 function closeDeleteModal() {
-
     deleteMealModal.style.display = "none";
 
     deletingMealId = null;
@@ -598,7 +579,6 @@ function closeDeleteModal() {
 confirmDeleteButton?.addEventListener(
     "click",
     () => {
-
         if (!deletingMealId) {
             return;
         }
@@ -619,7 +599,6 @@ confirmDeleteButton?.addEventListener(
         displayMeals();
 
         closeDeleteModal();
-
     }
 );
 
@@ -629,7 +608,6 @@ confirmDeleteButton?.addEventListener(
 ========================= */
 
 function openIngredientsModal(meal) {
-
     ingredientsModalTitle.textContent =
         meal.name;
 
@@ -641,7 +619,6 @@ function openIngredientsModal(meal) {
 
 
     if (ingredients.length === 0) {
-
         const message =
             document.createElement("p");
 
@@ -651,10 +628,8 @@ function openIngredientsModal(meal) {
         ingredientsList.appendChild(message);
 
     } else {
-
         ingredients.forEach(
             (ingredient) => {
-
                 const item =
                     document.createElement("div");
 
@@ -679,7 +654,6 @@ function openIngredientsModal(meal) {
 
 
                 ingredientsList.appendChild(item);
-
             }
         );
     }
@@ -700,14 +674,10 @@ closeIngredientsButton?.addEventListener(
 ingredientsModal?.addEventListener(
     "click",
     (event) => {
-
-        if (
-            event.target === ingredientsModal
-        ) {
+        if (event.target === ingredientsModal) {
             ingredientsModal.style.display =
                 "none";
         }
-
     }
 );
 
@@ -719,13 +689,9 @@ ingredientsModal?.addEventListener(
 editMealModal?.addEventListener(
     "click",
     (event) => {
-
-        if (
-            event.target === editMealModal
-        ) {
+        if (event.target === editMealModal) {
             closeEditModal();
         }
-
     }
 );
 
@@ -733,13 +699,9 @@ editMealModal?.addEventListener(
 deleteMealModal?.addEventListener(
     "click",
     (event) => {
-
-        if (
-            event.target === deleteMealModal
-        ) {
+        if (event.target === deleteMealModal) {
             closeDeleteModal();
         }
-
     }
 );
 
