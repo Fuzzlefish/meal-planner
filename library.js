@@ -42,30 +42,29 @@ function saveMeals(meals) {
 }
 
 
+
 /* =========================
-   ADD MEAL
+ADD MEAL
 ========================= */
 
 addMealButton?.addEventListener("click", () => {
     addMealForm.style.display = "block";
 
-    // Make sure tags are open when the form opens
+    // Start tags closed
     if (tagsSection) {
-        tagsSection.classList.remove("collapsed");
+        tagsSection.classList.add("collapsed");
     }
 
     if (tagArrow) {
-        tagArrow.textContent = "▼";
+        tagArrow.textContent = "▶";
     }
 
     newMealName.focus();
 });
 
-
 cancelMealButton?.addEventListener("click", () => {
     closeAddMealForm();
 });
-
 
 function closeAddMealForm() {
     addMealForm.style.display = "none";
@@ -74,22 +73,11 @@ function closeAddMealForm() {
     clearTagCheckboxes();
 
     newMealIngredients.innerHTML = "";
-
-    // Reset tags to open for next meal
-    if (tagsSection) {
-        tagsSection.classList.remove("collapsed");
-    }
-
-    if (tagArrow) {
-        tagArrow.textContent = "▼";
-    }
 }
-
 
 addIngredientButton?.addEventListener("click", () => {
     addIngredientRow(newMealIngredients);
 });
-
 
 saveMealButton?.addEventListener("click", () => {
     const mealName = newMealName.value.trim();
@@ -109,10 +97,11 @@ saveMealButton?.addEventListener("click", () => {
     });
 
     saveMeals(meals);
-
     closeAddMealForm();
     displayMeals();
 });
+
+
 
 
 /* =========================

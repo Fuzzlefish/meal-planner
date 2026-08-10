@@ -1526,16 +1526,6 @@ function updatePresetFromCurrentWeek(
     }
 
 
-    const confirmed =
-        confirm(
-            `Update "${preset.name}" with the current week?`
-        );
-
-    if (!confirmed) {
-        return;
-    }
-
-
     const plan =
         getMealPlan();
 
