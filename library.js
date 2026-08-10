@@ -15,255 +15,738 @@ const deleteMealMessage = document.querySelector("#deleteMealMessage");
 const cancelDeleteButton = document.querySelector("#cancelDeleteButton");
 const confirmDeleteButton = document.querySelector("#confirmDeleteButton");
 
+const newMealIngredients = document.querySelector("#newMealIngredients");
+const editMealIngredients = document.querySelector("#editMealIngredients");
+const addIngredientButton = document.querySelector("#addIngredientButton");
+const addEditIngredientButton = document.querySelector("#addEditIngredientButton");
+
+const ingredientsModal = document.querySelector("#ingredientsModal");
+const ingredientsModalTitle = document.querySelector("#ingredientsModalTitle");
+const ingredientsList = document.querySelector("#ingredientsList");
+const closeIngredientsButton = document.querySelector("#closeIngredientsButton");
+
 let editingMealId = null;
 let deletingMealId = null;
 
-function saveMeals(meals) {
-    localStorage.setItem("meals", JSON.stringify(meals));
-}
+
+/* =========================
+   STORAGE
+========================= */
 
 function getMeals() {
     return JSON.parse(localStorage.getItem("meals")) || [];
 }
 
-addMealButton.addEventListener("click", () => {
+function saveMeals(meals) {
+    localStorage.setItem("meals", JSON.stringify(meals));
+}
+
+
+/* =========================
+   ADD MEAL
+========================= */
+
+addMealButton?.addEventListener("click", () => {
     addMealForm.style.display = "block";
+
+    // Make sure tags are open when the form opens
+    if (tagsSection) {
+        tagsSection.classList.remove("collapsed");
+    }
+
+    if (tagArrow) {
+        tagArrow.textContent = "▼";
+    }
+
     newMealName.focus();
 });
 
-cancelMealButton.addEventListener("click", () => {
-    addMealForm.style.display = "none";
-    newMealName.value = "";
-    clearTagCheckboxes();
+
+cancelMealButton?.addEventListener("click", () => {
+    closeAddMealForm();
 });
 
-saveMealButton.addEventListener("click", () => {
+
+function closeAddMealForm() {
+    addMealForm.style.display = "none";
+    newMealName.value = "";
+
+    clearTagCheckboxes();
+
+    newMealIngredients.innerHTML = "";
+
+    // Reset tags to open for next meal
+    if (tagsSection) {
+        tagsSection.classList.remove("collapsed");
+    }
+
+    if (tagArrow) {
+        tagArrow.textContent = "▼";
+    }
+}
+
+
+addIngredientButton?.addEventListener("click", () => {
+    addIngredientRow(newMealIngredients);
+});
+
+
+saveMealButton?.addEventListener("click", () => {
     const mealName = newMealName.value.trim();
 
-    if (mealName === "") {
+    if (!mealName) {
         alert("Please enter a meal name.");
         return;
     }
 
     const meals = getMeals();
 
-    const meal = {
+    meals.push({
         id: crypto.randomUUID(),
         name: mealName,
-        tags: getSelectedTags()
-    };
+        tags: getSelectedTags(),
+        ingredients: getIngredients(newMealIngredients)
+    });
 
-    meals.push(meal);
     saveMeals(meals);
 
-    newMealName.value = "";
-    clearTagCheckboxes();
-    addMealForm.style.display = "none";
-
+    closeAddMealForm();
     displayMeals();
 });
 
-function getSelectedTags() {
-    const checkboxes = document.querySelectorAll(".mealTag:checked");
-    const tags = [];
 
-    checkboxes.forEach((checkbox) => {
-        tags.push(checkbox.value);
+/* =========================
+   INGREDIENTS
+========================= */
+
+const ingredientUnits = [
+    "",
+    "g",
+    "kg",
+    "ml",
+    "L",
+    "tsp",
+    "tbsp",
+    "cup",
+    "piece",
+    "clove",
+    "slice"
+];
+
+
+function addIngredientRow(container, ingredient = {}) {
+    const row = document.createElement("div");
+    row.className = "ingredientRow";
+
+    const amount = document.createElement("input");
+
+    amount.type = "number";
+    amount.min = "0";
+    amount.step = "any";
+    amount.placeholder = "Amount";
+    amount.value = ingredient.amount || "";
+
+
+    const unit = document.createElement("select");
+
+    ingredientUnits.forEach((unitName) => {
+        const option = document.createElement("option");
+
+        option.value = unitName;
+        option.textContent = unitName || "Unit";
+
+        unit.appendChild(option);
     });
 
-    return tags;
+    unit.value = ingredient.unit || "";
+
+
+    const name = document.createElement("input");
+
+    name.type = "text";
+    name.placeholder = "Ingredient";
+    name.value = ingredient.name || "";
+
+
+    const remove = document.createElement("button");
+
+    remove.type = "button";
+    remove.className = "removeIngredientButton";
+    remove.textContent = "×";
+
+
+    remove.addEventListener("click", () => {
+        row.remove();
+    });
+
+
+    row.append(
+        amount,
+        unit,
+        name,
+        remove
+    );
+
+    container.appendChild(row);
 }
 
-function clearTagCheckboxes() {
-    const checkboxes = document.querySelectorAll(".mealTag");
 
-    checkboxes.forEach((checkbox) => {
+function getIngredients(container) {
+    return [...container.querySelectorAll(".ingredientRow")]
+        .map((row) => {
+            const inputs = row.querySelectorAll("input");
+
+            return {
+                amount: inputs[0].value.trim(),
+                unit: row.querySelector("select").value,
+                name: inputs[1].value.trim()
+            };
+        })
+        .filter((ingredient) => ingredient.name);
+}
+
+
+/* =========================
+   TAGS
+========================= */
+
+function getSelectedTags() {
+    return [...document.querySelectorAll(".mealTag:checked")]
+        .map((checkbox) => checkbox.value);
+}
+
+
+function clearTagCheckboxes() {
+    document.querySelectorAll(".mealTag").forEach((checkbox) => {
         checkbox.checked = false;
     });
 }
 
+
+function getEditTags() {
+    return [...document.querySelectorAll(".editMealTag:checked")]
+        .map((checkbox) => checkbox.value);
+}
+
+
+function createTagElement(tag) {
+    const tagElement = document.createElement("span");
+
+    tagElement.textContent = tag;
+    tagElement.className = "mealTagDisplay";
+
+    const tagClass = tag
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+
+    tagElement.classList.add(`tag-${tagClass}`);
+
+    return tagElement;
+}
+
+
+/* =========================
+   COLLAPSIBLE TAGS
+========================= */
+
+// ADD MEAL TAGS
+
+const tagsToggle = document.querySelector("#toggleTagsButton");
+const tagsSection = document.querySelector("#mealTags");
+const tagArrow = document.querySelector("#tagArrow");
+
+
+if (tagsToggle && tagsSection) {
+
+    tagsToggle.addEventListener("click", () => {
+
+        const collapsed =
+            tagsSection.classList.toggle("collapsed");
+
+        if (tagArrow) {
+            tagArrow.textContent =
+                collapsed ? "▶" : "▼";
+        }
+
+    });
+
+}
+
+
+// EDIT MEAL TAGS
+
+const editTagsToggle =
+    document.querySelector("#toggleEditTagsButton");
+
+const editTagsSection =
+    document.querySelector("#editMealTags");
+
+const editTagArrow =
+    document.querySelector("#editTagArrow");
+
+
+if (editTagsToggle && editTagsSection) {
+
+    editTagsToggle.addEventListener("click", () => {
+
+        const collapsed =
+            editTagsSection.classList.toggle("collapsed");
+
+        if (editTagArrow) {
+            editTagArrow.textContent =
+                collapsed ? "▶" : "▼";
+        }
+
+    });
+
+}
+
+
+/* =========================
+   DISPLAY MEALS
+========================= */
+
 function displayMeals() {
+
     mealList.innerHTML = "";
 
     const meals = getMeals();
 
+
     if (meals.length === 0) {
+
         const message = document.createElement("p");
-        message.textContent = "You haven't added any meals yet.";
+
+        message.textContent =
+            "You haven't added any meals yet.";
+
         mealList.appendChild(message);
+
         return;
     }
 
+
     meals.forEach((meal) => {
-        const mealItem = document.createElement("div");
-        mealItem.classList.add("mealItem");
 
-        const mealTitle = document.createElement("h3");
-        mealTitle.textContent = meal.name;
-        mealItem.appendChild(mealTitle);
+        const mealItem =
+            document.createElement("div");
 
-        const tagContainer = document.createElement("div");
-        tagContainer.classList.add("mealTags");
+        mealItem.className = "mealItem";
 
-        meal.tags.forEach((tag) => {
-        const tagElement = document.createElement("span");
 
-        tagElement.textContent = tag;
-        tagElement.classList.add("mealTagDisplay");
+        const title =
+            document.createElement("h3");
 
-        const tagClass = tag
-            .toLowerCase()
-            .replace(/\s+/g, "-");
+        title.textContent = meal.name;
 
-        tagElement.classList.add(`tag-${tagClass}`);
 
-        tagContainer.appendChild(tagElement);
-    });
+        const tagContainer =
+            document.createElement("div");
 
-        mealItem.appendChild(tagContainer);
+        tagContainer.className = "mealTags";
 
-        const editButton = document.createElement("button");
-        editButton.textContent = "Edit";
 
-        editButton.addEventListener("click", () => {
-            openEditModal(meal.id);
+        (meal.tags || []).forEach((tag) => {
+
+            tagContainer.appendChild(
+                createTagElement(tag)
+            );
+
         });
 
-        mealItem.appendChild(editButton);
 
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
+        const ingredientsButton =
+            createButton(
+                "View Ingredients",
+                () => openIngredientsModal(meal)
+            );
 
-        deleteButton.addEventListener("click", () => {
-            openDeleteModal(meal.id);
-        });
 
-        mealItem.appendChild(deleteButton);
+        const editButton =
+            createButton(
+                "Edit",
+                () => openEditModal(meal.id)
+            );
+
+
+        const deleteButton =
+            createButton(
+                "Delete",
+                () => openDeleteModal(meal.id)
+            );
+
+
+        mealItem.append(
+            title,
+            tagContainer,
+            ingredientsButton,
+            editButton,
+            deleteButton
+        );
+
+
         mealList.appendChild(mealItem);
+
     });
+
 }
 
+
+function createButton(text, action) {
+
+    const button =
+        document.createElement("button");
+
+    button.type = "button";
+    button.textContent = text;
+
+    button.addEventListener(
+        "click",
+        action
+    );
+
+    return button;
+}
+
+
+/* =========================
+   EDIT MEAL
+========================= */
+
 function openEditModal(mealId) {
-    const meals = getMeals();
-    const meal = meals.find((meal) => meal.id === mealId);
+
+    const meal =
+        getMeals().find(
+            (meal) => meal.id === mealId
+        );
+
 
     if (!meal) {
         return;
     }
+
 
     editingMealId = mealId;
 
     editMealName.value = meal.name;
 
-    const tagCheckboxes = document.querySelectorAll(".editMealTag");
 
-    tagCheckboxes.forEach((checkbox) => {
-        checkbox.checked = meal.tags.includes(checkbox.value);
-    });
+    document
+        .querySelectorAll(".editMealTag")
+        .forEach((checkbox) => {
+
+            checkbox.checked =
+                (meal.tags || [])
+                    .includes(checkbox.value);
+
+        });
+
+
+    editMealIngredients.innerHTML = "";
+
+
+    (meal.ingredients || []).forEach(
+        (ingredient) => {
+
+            addIngredientRow(
+                editMealIngredients,
+                ingredient
+            );
+
+        }
+    );
+
+
+    // Reset edit tags to open
+    if (editMealTagsSection) {
+        editMealTagsSection.classList.remove("collapsed");
+    }
+
+    if (editTagArrow) {
+        editTagArrow.textContent = "▼";
+    }
+
 
     editMealModal.style.display = "flex";
+
     editMealName.focus();
 }
 
-cancelEditButton.addEventListener("click", () => {
-    editMealModal.style.display = "none";
-    editingMealId = null;
-});
 
-saveEditButton.addEventListener("click", () => {
-    if (!editingMealId) {
-        return;
+addEditIngredientButton?.addEventListener(
+    "click",
+    () => {
+        addIngredientRow(editMealIngredients);
     }
+);
 
-    const newName = editMealName.value.trim();
 
-    if (newName === "") {
-        alert("Please enter a meal name.");
-        return;
+cancelEditButton?.addEventListener(
+    "click",
+    () => {
+        closeEditModal();
     }
+);
 
-    const meals = getMeals();
-    const meal = meals.find((meal) => meal.id === editingMealId);
 
-    if (!meal) {
-        return;
-    }
-
-    meal.name = newName;
-    meal.tags = getEditTags();
-
-    saveMeals(meals);
-    displayMeals();
+function closeEditModal() {
 
     editMealModal.style.display = "none";
+
     editingMealId = null;
-});
-
-function getEditTags() {
-    const checkboxes = document.querySelectorAll(".editMealTag");
-    const tags = [];
-
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            tags.push(checkbox.value);
-        }
-    });
-
-    return tags;
 }
 
+
+saveEditButton?.addEventListener(
+    "click",
+    () => {
+
+        if (!editingMealId) {
+            return;
+        }
+
+
+        const newName =
+            editMealName.value.trim();
+
+
+        if (!newName) {
+
+            alert("Please enter a meal name.");
+
+            return;
+        }
+
+
+        const meals = getMeals();
+
+
+        const meal =
+            meals.find(
+                (meal) =>
+                    meal.id === editingMealId
+            );
+
+
+        if (!meal) {
+            return;
+        }
+
+
+        meal.name = newName;
+
+        meal.tags = getEditTags();
+
+        meal.ingredients =
+            getIngredients(editMealIngredients);
+
+
+        saveMeals(meals);
+
+        displayMeals();
+
+        closeEditModal();
+
+    }
+);
+
+
+/* =========================
+   DELETE MEAL
+========================= */
+
 function openDeleteModal(mealId) {
-    const meals = getMeals();
-    const meal = meals.find((meal) => meal.id === mealId);
+
+    const meal =
+        getMeals().find(
+            (meal) => meal.id === mealId
+        );
+
 
     if (!meal) {
         return;
     }
 
+
     deletingMealId = mealId;
+
 
     deleteMealMessage.textContent =
         `Are you sure you want to delete "${meal.name}"?`;
 
+
     deleteMealModal.style.display = "flex";
 }
 
-cancelDeleteButton.addEventListener("click", () => {
-    deleteMealModal.style.display = "none";
-    deletingMealId = null;
-});
 
-confirmDeleteButton.addEventListener("click", () => {
-    if (!deletingMealId) {
-        return;
+cancelDeleteButton?.addEventListener(
+    "click",
+    () => {
+        closeDeleteModal();
     }
+);
 
-    const meals = getMeals();
 
-    const updatedMeals = meals.filter(
-        (meal) => meal.id !== deletingMealId
-    );
-
-    saveMeals(updatedMeals);
-    displayMeals();
+function closeDeleteModal() {
 
     deleteMealModal.style.display = "none";
+
     deletingMealId = null;
-});
+}
 
-editMealModal.addEventListener("click", (event) => {
-    if (event.target === editMealModal) {
-        editMealModal.style.display = "none";
-        editingMealId = null;
-    }
-});
 
-deleteMealModal.addEventListener("click", (event) => {
-    if (event.target === deleteMealModal) {
-        deleteMealModal.style.display = "none";
-        deletingMealId = null;
+confirmDeleteButton?.addEventListener(
+    "click",
+    () => {
+
+        if (!deletingMealId) {
+            return;
+        }
+
+
+        const meals = getMeals();
+
+
+        const updatedMeals =
+            meals.filter(
+                (meal) =>
+                    meal.id !== deletingMealId
+            );
+
+
+        saveMeals(updatedMeals);
+
+        displayMeals();
+
+        closeDeleteModal();
+
     }
-});
+);
+
+
+/* =========================
+   INGREDIENTS MODAL
+========================= */
+
+function openIngredientsModal(meal) {
+
+    ingredientsModalTitle.textContent =
+        meal.name;
+
+    ingredientsList.innerHTML = "";
+
+
+    const ingredients =
+        meal.ingredients || [];
+
+
+    if (ingredients.length === 0) {
+
+        const message =
+            document.createElement("p");
+
+        message.textContent =
+            "No ingredients have been added.";
+
+        ingredientsList.appendChild(message);
+
+    } else {
+
+        ingredients.forEach(
+            (ingredient) => {
+
+                const item =
+                    document.createElement("div");
+
+                item.className =
+                    "ingredientDisplay";
+
+
+                const amount =
+                    ingredient.amount
+                        ? `${ingredient.amount} `
+                        : "";
+
+
+                const unit =
+                    ingredient.unit
+                        ? `${ingredient.unit} `
+                        : "";
+
+
+                item.textContent =
+                    `${amount}${unit}${ingredient.name}`;
+
+
+                ingredientsList.appendChild(item);
+
+            }
+        );
+    }
+
+
+    ingredientsModal.style.display = "flex";
+}
+
+
+closeIngredientsButton?.addEventListener(
+    "click",
+    () => {
+        ingredientsModal.style.display = "none";
+    }
+);
+
+
+ingredientsModal?.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            event.target === ingredientsModal
+        ) {
+            ingredientsModal.style.display =
+                "none";
+        }
+
+    }
+);
+
+
+/* =========================
+   MODAL BACKDROP CLOSING
+========================= */
+
+editMealModal?.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            event.target === editMealModal
+        ) {
+            closeEditModal();
+        }
+
+    }
+);
+
+
+deleteMealModal?.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            event.target === deleteMealModal
+        ) {
+            closeDeleteModal();
+        }
+
+    }
+);
+
+
+/* =========================
+   INITIALISE
+========================= */
 
 displayMeals();
 

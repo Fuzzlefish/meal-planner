@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Meal Planner">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <title>Meal Library</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <h1>Meal Library</h1>
-
     <div class="header-buttons">
         <a href="index.html"><button>Weekly Planner</button></a>
         <a href="library.html"><button>Meal Library</button></a>
@@ -22,92 +24,94 @@
 
         <input type="text" id="newMealName" placeholder="Enter Meal Name">
 
-        <h3>Tags</h3>
+        <div class="tagSection">
+            <button type="button" id="toggleTagsButton" class="tagToggle">
+                <span>Tags</span>
+                <span id="tagArrow">▼</span>
+            </button>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Vegetarian">
-            Vegetarian
-        </label>
-        <br>
+            <div id="mealTags" class="tagOptions">
+                <label>
+                    <input type="checkbox" class="mealTag" value="Vegetarian">
+                    <span>Vegetarian</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Vegan">
-            Vegan
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Vegan">
+                    <span>Vegan</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="High Protein">
-            High Protein
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="High Protein">
+                    <span>High Protein</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Healthy">
-            Healthy
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Healthy">
+                    <span>Healthy</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Quick">
-            Quick
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Quick">
+                    <span>Quick</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Cheap">
-            Cheap
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Cheap">
+                    <span>Cheap</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Easy">
-            Easy
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Easy">
+                    <span>Easy</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Meal Prep">
-            Meal Prep
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Meal Prep">
+                    <span>Meal Prep</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Freezer Friendly">
-            Freezer Friendly
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Freezer Friendly">
+                    <span>Freezer Friendly</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Family Favourite">
-            Family Favourite
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Family Favourite">
+                    <span>Family Favourite</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Comfort Food">
-            Comfort Food
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Comfort Food">
+                    <span>Comfort Food</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="One Pot">
-            One Pot
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="One Pot">
+                    <span>One Pot</span>
+                </label>
 
-        <label>
-            <input type="checkbox" class="mealTag" value="Leftovers">
-            Leftovers
-        </label>
-        <br>
+                <label>
+                    <input type="checkbox" class="mealTag" value="Leftovers">
+                    <span>Leftovers</span>
+                </label>
+            </div>
+        </div>
 
+        <div class="ingredientsSection">
+            <h3>Ingredients</h3>
 
+            <div id="newMealIngredients"></div>
 
-        <br><br>
+            <button type="button" id="addIngredientButton">
+                + Add Ingredient
+            </button>
+        </div>
 
-        <button id="cancelMealButton">Cancel</button>
-        <button id="saveMealButton">Save</button>
+        <div class="modalButtons">
+            <button id="cancelMealButton">Cancel</button>
+            <button id="saveMealButton">Save</button>
+        </div>
     </div>
 
     <h2>Your Meals</h2>
@@ -123,75 +127,88 @@
                 placeholder="Meal name"
             >
 
-            <h3>Categories</h3>
+            <div class="tagSection">
+                <button type="button" id="toggleEditTagsButton" class="tagToggle">
+                    <span>Tags</span>
+                    <span id="editTagArrow">▼</span>
+                </button>
 
-            <div id="editMealTags">
+                <div id="editMealTags" class="tagOptions">
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Vegetarian">
+                        <span>Vegetarian</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Vegetarian">
-                    Vegetarian
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Vegan">
+                        <span>Vegan</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Vegan">
-                    Vegan
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="High Protein">
+                        <span>High Protein</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="High Protein">
-                    High Protein
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Healthy">
+                        <span>Healthy</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Healthy">
-                    Healthy
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Quick">
+                        <span>Quick</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Quick">
-                    Quick
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Cheap">
+                        <span>Cheap</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Cheap">
-                    Cheap
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Easy">
+                        <span>Easy</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Easy">
-                    Easy
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Meal Prep">
+                        <span>Meal Prep</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Meal Prep">
-                    Meal Prep
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Freezer Friendly">
+                        <span>Freezer Friendly</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Freezer Friendly">
-                    Freezer Friendly
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Family Favourite">
+                        <span>Family Favourite</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Family Favourite">
-                    Family Favourite
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Comfort Food">
+                        <span>Comfort Food</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Comfort Food">
-                    Comfort Food
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="One Pot">
+                        <span>One Pot</span>
+                    </label>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="One Pot">
-                    One Pot
-                </label>
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Leftovers">
+                        <span>Leftovers</span>
+                    </label>
+                </div>
+            </div>
 
-                <label>
-                    <input type="checkbox" class="editMealTag" value="Leftovers">
-                    Leftovers
-                </label>
+            <div class="ingredientsSection">
+                <h3>Ingredients</h3>
 
+                <div id="editMealIngredients"></div>
+
+                <button type="button" id="addEditIngredientButton">
+                    + Add Ingredient
+                </button>
             </div>
 
             <div class="modalButtons">
@@ -200,8 +217,6 @@
             </div>
         </div>
     </div>
-
-
 
     <div id="deleteMealModal" class="mealModal">
         <div class="modalContent">
@@ -216,10 +231,20 @@
         </div>
     </div>
 
+    <div id="ingredientsModal" class="mealModal">
+        <div class="modalContent">
+            <h2 id="ingredientsModalTitle">Ingredients</h2>
 
+            <div id="ingredientsList"></div>
+
+            <button id="closeIngredientsButton">
+                Close
+            </button>
+        </div>
+    </div>
 
     <script src="library.js"></script>
-    <script src ="theme.js"></script>
+    <script src="theme.js"></script>
 </body>
 </html>
 

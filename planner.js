@@ -5,6 +5,11 @@ const availableMeals = document.querySelector("#availableMeals");
 const cancelMealButton = document.querySelector("#cancelMealButton");
 const mealFilters = document.querySelector("#mealFilters");
 
+const ingredientsModal = document.querySelector("#ingredientsModal");
+const ingredientsModalTitle = document.querySelector("#ingredientsModalTitle");
+const ingredientsList = document.querySelector("#ingredientsList");
+const closeIngredientsButton = document.querySelector("#closeIngredientsButton");
+
 let selectedDay = null;
 let selectedMealType = null;
 let selectedCategory = "all";
@@ -30,15 +35,17 @@ if (mealPlan) {
         const day = event.target.closest(".day");
         const meal = event.target.closest(".meal");
 
-        if (!day || !meal) {
+        if (!day || !meal || !mealModal) {
             return;
         }
 
         selectedDay = day.id;
         selectedMealType = meal.querySelector("h3").textContent;
 
-        mealModalTitle.textContent =
-            `Add Meal to ${capitalize(selectedDay)} ${selectedMealType}`;
+        if (mealModalTitle) {
+            mealModalTitle.textContent =
+                `Add Meal to ${capitalize(selectedDay)} ${selectedMealType}`;
+        }
 
         selectedCategory = "all";
 
@@ -156,9 +163,9 @@ function selectMeal(meal) {
     let selectedMealSection = null;
 
     mealSections.forEach((section) => {
-        const heading = section.querySelector("h3").textContent;
+        const heading = section.querySelector("h3");
 
-        if (heading === selectedMealType) {
+        if (heading && heading.textContent === selectedMealType) {
             selectedMealSection = section;
         }
     });
@@ -169,10 +176,22 @@ function selectMeal(meal) {
 
     const mealList = selectedMealSection.querySelector("ul");
 
+    if (!mealList) {
+        return;
+    }
+
     mealList.innerHTML = "";
 
     const listItem = document.createElement("li");
     listItem.textContent = meal.name;
+
+    const ingredientsButton = document.createElement("button");
+    ingredientsButton.textContent = "View Ingredients";
+    ingredientsButton.classList.add("viewIngredientsButton");
+
+    ingredientsButton.addEventListener("click", () => {
+        openIngredientsModal(meal);
+    });
 
     const removeButton = document.createElement("button");
     removeButton.textContent = "Remove";
@@ -182,7 +201,10 @@ function selectMeal(meal) {
         removeMealFromPlan();
     });
 
+    listItem.appendChild(document.createElement("br"));
+    listItem.appendChild(ingredientsButton);
     listItem.appendChild(removeButton);
+
     mealList.appendChild(listItem);
 
     const plan = getMealPlan();
@@ -196,7 +218,9 @@ function selectMeal(meal) {
 
     saveMealPlan(plan);
 
-    mealModal.style.display = "none";
+    if (mealModal) {
+        mealModal.style.display = "none";
+    }
 }
 
 function removeMealFromPlan() {
@@ -210,9 +234,9 @@ function removeMealFromPlan() {
     let selectedMealSection = null;
 
     mealSections.forEach((section) => {
-        const heading = section.querySelector("h3").textContent;
+        const heading = section.querySelector("h3");
 
-        if (heading === selectedMealType) {
+        if (heading && heading.textContent === selectedMealType) {
             selectedMealSection = section;
         }
     });
@@ -222,7 +246,10 @@ function removeMealFromPlan() {
     }
 
     const mealList = selectedMealSection.querySelector("ul");
-    mealList.innerHTML = "";
+
+    if (mealList) {
+        mealList.innerHTML = "";
+    }
 
     const plan = getMealPlan();
 
@@ -248,9 +275,13 @@ function loadMealPlan() {
         const mealSections = dayElement.querySelectorAll(".meal");
 
         mealSections.forEach((section) => {
-            const mealType =
-                section.querySelector("h3").textContent.toLowerCase();
+            const heading = section.querySelector("h3");
 
+            if (!heading) {
+                return;
+            }
+
+            const mealType = heading.textContent.toLowerCase();
             const mealId = dayPlan[mealType];
 
             if (!mealId) {
@@ -273,10 +304,22 @@ function loadMealPlan() {
 function displaySavedMeal(section, meal) {
     const mealList = section.querySelector("ul");
 
+    if (!mealList) {
+        return;
+    }
+
     mealList.innerHTML = "";
 
     const listItem = document.createElement("li");
     listItem.textContent = meal.name;
+
+    const ingredientsButton = document.createElement("button");
+    ingredientsButton.textContent = "View Ingredients";
+    ingredientsButton.classList.add("viewIngredientsButton");
+
+    ingredientsButton.addEventListener("click", () => {
+        openIngredientsModal(meal);
+    });
 
     const removeButton = document.createElement("button");
     removeButton.textContent = "Remove";
@@ -284,8 +327,19 @@ function displaySavedMeal(section, meal) {
 
     removeButton.addEventListener("click", () => {
         const day = section.closest(".day");
+
+        if (!day) {
+            return;
+        }
+
         const dayName = day.id;
-        const mealType = section.querySelector("h3").textContent;
+        const heading = section.querySelector("h3");
+
+        if (!heading) {
+            return;
+        }
+
+        const mealType = heading.textContent;
 
         listItem.remove();
 
@@ -298,13 +352,75 @@ function displaySavedMeal(section, meal) {
         saveMealPlan(plan);
     });
 
+    listItem.appendChild(document.createElement("br"));
+    listItem.appendChild(ingredientsButton);
     listItem.appendChild(removeButton);
+
     mealList.appendChild(listItem);
 }
 
 if (cancelMealButton) {
     cancelMealButton.addEventListener("click", () => {
-        mealModal.style.display = "none";
+        if (mealModal) {
+            mealModal.style.display = "none";
+        }
+    });
+}
+
+function openIngredientsModal(meal) {
+    if (
+        !ingredientsModal ||
+        !ingredientsModalTitle ||
+        !ingredientsList
+    ) {
+        return;
+    }
+
+    ingredientsModalTitle.textContent = meal.name;
+    ingredientsList.innerHTML = "";
+
+    const ingredients = meal.ingredients || [];
+
+    if (ingredients.length === 0) {
+        const message = document.createElement("p");
+        message.textContent = "No ingredients have been added.";
+        ingredientsList.appendChild(message);
+    } else {
+        ingredients.forEach((ingredient) => {
+            const item = document.createElement("div");
+            item.classList.add("ingredientDisplay");
+
+            const amount = ingredient.amount
+                ? `${ingredient.amount} `
+                : "";
+
+            const unit = ingredient.unit
+                ? `${ingredient.unit} `
+                : "";
+
+            item.textContent =
+                `${amount}${unit}${ingredient.name}`;
+
+            ingredientsList.appendChild(item);
+        });
+    }
+
+    ingredientsModal.style.display = "flex";
+}
+
+if (closeIngredientsButton) {
+    closeIngredientsButton.addEventListener("click", () => {
+        if (ingredientsModal) {
+            ingredientsModal.style.display = "none";
+        }
+    });
+}
+
+if (ingredientsModal) {
+    ingredientsModal.addEventListener("click", (event) => {
+        if (event.target === ingredientsModal) {
+            ingredientsModal.style.display = "none";
+        }
     });
 }
 
@@ -340,4 +456,3 @@ document.querySelectorAll(".dayHeader").forEach((header) => {
 });
 
 loadMealPlan();
-

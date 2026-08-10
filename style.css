@@ -1,7 +1,15 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
 
 * {
     box-sizing: border-box;
 }
+
+
+/* =========================================================
+   THEME VARIABLES
+========================================================= */
 
 :root {
     --background: #f5eee4;
@@ -17,6 +25,11 @@
     --modal: rgba(48, 33, 25, 0.65);
 }
 
+
+/* =========================================================
+   BODY
+========================================================= */
+
 body {
     margin: 0;
     padding: 20px;
@@ -26,6 +39,11 @@ body {
     background: var(--background);
     transition: 0.3s ease;
 }
+
+
+/* =========================================================
+   HEADINGS
+========================================================= */
 
 h1 {
     margin: 10px 0 20px;
@@ -37,6 +55,11 @@ h2,
 h3 {
     color: var(--heading);
 }
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 button {
     border: 0;
@@ -61,6 +84,11 @@ button:active {
     transform: translateY(1px);
 }
 
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .header-buttons {
     display: flex;
     justify-content: center;
@@ -73,6 +101,11 @@ button:active {
     max-width: 700px;
     margin: auto;
 }
+
+
+/* =========================================================
+   DAYS & MEALS
+========================================================= */
 
 .day,
 .mealItem,
@@ -122,6 +155,14 @@ button:active {
     font-weight: 600;
 }
 
+.mealItem {
+    width: 100%;
+    max-width: 600px;
+    padding: 18px;
+    margin: 12px auto;
+    border-radius: 16px;
+}
+
 .removeMealButton {
     padding: 8px 12px;
     background: var(--button-hover);
@@ -131,6 +172,11 @@ button:active {
 .removeMealButton:hover {
     background: var(--button);
 }
+
+
+/* =========================================================
+   ADD / EDIT MEAL FORMS
+========================================================= */
 
 #addMealForm {
     width: 100%;
@@ -159,13 +205,10 @@ button:active {
     border-color: var(--button);
 }
 
-.mealItem {
-    width: 100%;
-    max-width: 600px;
-    padding: 18px;
-    margin: 12px auto;
-    border-radius: 16px;
-}
+
+/* =========================================================
+   MEAL TAGS
+========================================================= */
 
 .mealTags {
     margin-bottom: 10px;
@@ -181,6 +224,192 @@ button:active {
     font-size: 0.85rem;
     font-weight: 600;
 }
+
+.tagSection {
+    width: 100%;
+    max-width: 520px;
+    margin: 20px auto;
+}
+
+.tagToggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.tagOptions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tagOptions.collapsed {
+    display: none;
+}
+
+.tagOptions label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--card);
+}
+
+#editMealTags {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+}
+
+#editMealTags label {
+    width: 100%;
+    padding: 10px;
+    margin: 3px 0;
+    text-align: left;
+    background: var(--secondary);
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   CHECKBOXES & LABELS
+========================================================= */
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    accent-color: var(--button);
+}
+
+label {
+    display: inline-block;
+    padding: 6px;
+    color: var(--text);
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   INGREDIENTS
+========================================================= */
+
+.ingredientsSection {
+    width: 100%;
+    max-width: 520px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.ingredientsSection h3 {
+    margin: 0 0 12px;
+    text-align: center;
+}
+
+
+/* ---------------------------------------------------------
+   Ingredient Row - Desktop
+--------------------------------------------------------- */
+
+.ingredientRow {
+    display: grid;
+    grid-template-columns: 75px 80px minmax(0, 1fr) 44px;
+    gap: 6px;
+    width: 100%;
+    margin: 8px 0;
+    align-items: center;
+}
+
+.ingredientRow input,
+.ingredientRow select {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.ingredientRow input:focus,
+.ingredientRow select:focus {
+    outline: none;
+    border-color: var(--button);
+}
+
+.ingredientRow input::placeholder {
+    color: var(--text);
+    opacity: 0.65;
+}
+
+
+/* ---------------------------------------------------------
+   Remove Ingredient Button
+--------------------------------------------------------- */
+
+.removeIngredientButton {
+    width: 44px;
+    min-height: 46px;
+    padding: 5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--button-hover);
+}
+
+.removeIngredientButton:hover {
+    background: var(--button);
+}
+
+
+/* ---------------------------------------------------------
+   Add Ingredient Buttons
+--------------------------------------------------------- */
+
+#addIngredientButton,
+#addEditIngredientButton {
+    width: 100%;
+    margin: 10px 0 0;
+}
+
+
+/* ---------------------------------------------------------
+   Ingredients Viewing Modal
+--------------------------------------------------------- */
+
+#ingredientsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.ingredientDisplay {
+    width: 100%;
+    padding: 13px 15px;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: left;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
 
 #mealModal,
 .mealModal {
@@ -216,6 +445,11 @@ button:active {
     font-size: 1rem;
 }
 
+
+/* =========================================================
+   MEAL FILTERS
+========================================================= */
+
 #mealFilters,
 #themeOptions {
     display: flex;
@@ -240,6 +474,11 @@ button:active {
     background: var(--button);
     color: white;
 }
+
+
+/* =========================================================
+   AVAILABLE MEALS
+========================================================= */
 
 #availableMeals {
     display: flex;
@@ -270,23 +509,10 @@ button:active {
     font-weight: normal;
 }
 
-#cancelMealButton {
-    background: var(--button-hover);
-}
 
-input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-    accent-color: var(--button);
-}
-
-label {
-    display: inline-block;
-    padding: 6px;
-    color: var(--text);
-    font-size: 1rem;
-}
+/* =========================================================
+   THEME BUTTON
+========================================================= */
 
 #themeButton {
     position: fixed;
@@ -319,20 +545,10 @@ label {
     border: 2px solid var(--text);
 }
 
-#editMealTags {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
-}
 
-#editMealTags label {
-    width: 100%;
-    padding: 10px;
-    margin: 3px 0;
-    text-align: left;
-    background: var(--secondary);
-    border-radius: 10px;
-}
+/* =========================================================
+   MODAL BUTTONS
+========================================================= */
 
 .modalButtons {
     display: flex;
@@ -345,6 +561,10 @@ label {
     flex: 1;
 }
 
+#cancelMealButton {
+    background: var(--button-hover);
+}
+
 #confirmDeleteButton {
     background: #a84d45;
 }
@@ -354,7 +574,96 @@ label {
 }
 
 
-/* Themes */
+/* =========================================================
+   COLLAPSIBLE DAYS
+========================================================= */
+
+.dayHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.dayArrow {
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.dayContent {
+    max-height: 1000px;
+    overflow: hidden;
+    opacity: 1;
+    transition:
+        max-height 0.3s ease,
+        opacity 0.2s ease;
+}
+
+.day.collapsed .dayContent {
+    max-height: 0;
+    opacity: 0;
+}
+
+.day.collapsed .dayArrow {
+    transform: rotate(-90deg);
+}
+
+
+/* =========================================================
+   TAG COLOURS
+========================================================= */
+
+.tag-vegetarian {
+    background: #c9dfc5;
+    color: #315437;
+}
+
+.tag-cheap {
+    background: #f0d99a;
+    color: #6b5318;
+}
+
+.tag-quick {
+    background: #f3c79b;
+    color: #71431d;
+}
+
+.tag-high-protein {
+    background: #e5aaa4;
+    color: #6b2924;
+}
+
+.tag-healthy {
+    background: #b9dcd3;
+    color: #24584e;
+}
+
+.tag-freezer-friendly {
+    background: #b9d5e5;
+    color: #28546b;
+}
+
+.tag-spicy {
+    background: #e9aaa0;
+    color: #702b24;
+}
+
+.tag-family-friendly {
+    background: #d4c1df;
+    color: #533d63;
+}
+
+.tag-one-pot {
+    background: #d7c0a7;
+    color: #59412e;
+}
+
+
+/* =========================================================
+   THEMES
+========================================================= */
 
 body[data-theme="coffee"] {
     --background: #f5eee4;
@@ -441,9 +750,12 @@ body[data-theme="red"] {
 }
 
 
-/* Mobile */
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 600px) {
+
     body {
         padding: 12px;
     }
@@ -457,6 +769,11 @@ body[data-theme="red"] {
         padding: 12px 16px;
     }
 
+
+    /* -----------------------------------------------------
+       Header
+    ----------------------------------------------------- */
+
     .header-buttons {
         width: 100%;
     }
@@ -469,6 +786,11 @@ body[data-theme="red"] {
         width: 100%;
         margin: 0;
     }
+
+
+    /* -----------------------------------------------------
+       Days & Meals
+    ----------------------------------------------------- */
 
     .day {
         padding: 15px;
@@ -485,6 +807,29 @@ body[data-theme="red"] {
         margin: 5px 0;
     }
 
+    .mealItem {
+        padding: 15px;
+    }
+
+
+    /* -----------------------------------------------------
+       Forms
+    ----------------------------------------------------- */
+
+    #addMealForm {
+        padding: 20px;
+    }
+
+    #newMealName {
+        min-height: 54px;
+        font-size: 1.05rem;
+    }
+
+
+    /* -----------------------------------------------------
+       Modals
+    ----------------------------------------------------- */
+
     .modalContent,
     .mealModal .modalContent {
         padding: 20px;
@@ -496,21 +841,13 @@ body[data-theme="red"] {
         padding: 12px;
     }
 
-    #addMealForm {
-        padding: 20px;
-    }
 
-    #newMealName {
-        min-height: 54px;
-        font-size: 1.05rem;
-    }
+    /* -----------------------------------------------------
+       Tags
+    ----------------------------------------------------- */
 
-    .mealItem {
-        padding: 15px;
-    }
-
-    #themeOptions button {
-        flex: 1 1 40%;
+    .tagOptions {
+        grid-template-columns: 1fr;
     }
 
     #editMealTags label {
@@ -518,6 +855,104 @@ body[data-theme="red"] {
         align-items: center;
         min-height: 48px;
     }
+
+
+    /* -----------------------------------------------------
+       INGREDIENTS - MOBILE
+
+       Layout:
+
+       [ Ingredient name              ]
+       [ Amount ] [ Unit ]        [ X ]
+
+       This prevents four controls being
+       squeezed onto one line.
+    ----------------------------------------------------- */
+
+    .ingredientsSection {
+        width: 100%;
+        margin: 18px auto;
+    }
+
+    .ingredientRow {
+        display: grid;
+        grid-template-columns: 1fr 75px 42px;
+
+        grid-template-areas:
+            "name name remove"
+            "amount unit remove";
+
+        gap: 6px;
+
+        width: 100%;
+        padding: 10px;
+        margin: 12px 0;
+
+        background: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+    }
+
+    .ingredientRow input,
+    .ingredientRow select {
+        min-height: 46px;
+        padding: 9px;
+        font-size: 0.9rem;
+        border-radius: 9px;
+    }
+
+    /* Ingredient name */
+    .ingredientRow input[type="text"] {
+        grid-area: name;
+    }
+
+    /* Amount */
+    .ingredientRow input[type="number"] {
+        grid-area: amount;
+    }
+
+    /* Unit */
+    .ingredientRow select {
+        grid-area: unit;
+    }
+
+    /* Remove ingredient */
+    .ingredientRow .removeIngredientButton {
+        grid-area: remove;
+        align-self: center;
+
+        width: 42px;
+        height: 46px;
+        min-height: 46px;
+
+        padding: 0;
+        margin: 0;
+
+        border-radius: 9px;
+        font-size: 1.25rem;
+    }
+
+    /* Add ingredient */
+    #addIngredientButton,
+    #addEditIngredientButton {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 8px;
+    }
+
+
+    /* -----------------------------------------------------
+       Theme Options
+    ----------------------------------------------------- */
+
+    #themeOptions button {
+        flex: 1 1 40%;
+    }
+
+
+    /* -----------------------------------------------------
+       Modal Buttons
+    ----------------------------------------------------- */
 
     .modalButtons {
         flex-direction: column;
@@ -528,81 +963,4 @@ body[data-theme="red"] {
         margin: 4px 0;
     }
 }
-
-.tag-vegetarian {
-    background: #c9dfc5;
-    color: #315437;
-}
-
-.tag-cheap {
-    background: #f0d99a;
-    color: #6b5318;
-}
-
-.tag-quick {
-    background: #f3c79b;
-    color: #71431d;
-}
-
-.tag-high-protein {
-    background: #e5aaa4;
-    color: #6b2924;
-}
-
-.tag-healthy {
-    background: #b9dcd3;
-    color: #24584e;
-}
-
-.tag-freezer-friendly {
-    background: #b9d5e5;
-    color: #28546b;
-}
-
-.tag-spicy {
-    background: #e9aaa0;
-    color: #702b24;
-}
-
-.tag-family-friendly {
-    background: #d4c1df;
-    color: #533d63;
-}
-
-.tag-one-pot {
-    background: #d7c0a7;
-    color: #59412e;
-}
-
-
-.dayHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    user-select: none;
-    margin: 0;
-}
-
-.dayArrow {
-    font-size: 0.9rem;
-    transition: transform 0.2s ease;
-}
-
-.dayContent {
-    max-height: 1000px;
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.2s ease;
-    opacity: 1;
-}
-
-.day.collapsed .dayContent {
-    max-height: 0;
-    opacity: 0;
-}
-
-.day.collapsed .dayArrow {
-    transform: rotate(-90deg);
-}
-
 
