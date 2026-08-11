@@ -500,38 +500,54 @@ label {
 }
 
 /* =========================================================
-   THEME BUTTON
+THEME BUTTON
 ========================================================= */
 
 #themeButton {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 1000;
-  margin: 0;
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    z-index: 1000;
+    margin: 0;
 }
+
+
+/* =========================================================
+THEME OPTIONS
+========================================================= */
 
 #themeOptions {
-  position: fixed;
-  top: 70px;
-  right: 15px;
-  z-index: 1000;
-  display: none;
-  width: 180px;
-  padding: 10px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    position: fixed;
+    bottom: 70px;
+    right: 15px;
+    top: auto;
+    z-index: 1000;
+
+    display: none;
+
+    width: 180px;
+    padding: 10px;
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.18);
 }
+
+
+/* Theme buttons */
 
 #themeOptions button {
-  width: 100%;
-  margin: 4px 0;
+    width: 100%;
+    margin: 4px 0;
 }
 
+
+/* Active theme */
+
 #themeOptions button.active {
-  border: 2px solid var(--text);
+    border: 2px solid var(--text);
 }
 
 /* =========================================================
