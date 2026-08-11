@@ -1165,3 +1165,426 @@ body[data-theme="red"] {
   }
 }
 
+/* =========================================================
+   SHOPPING LIST
+========================================================= */
+
+#shoppingPage {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.shoppingSubtitle {
+    margin: -10px auto 25px;
+    color: var(--heading);
+    opacity: 0.8;
+}
+
+
+/* =========================================================
+   SHOPPING SECTIONS
+========================================================= */
+
+.shoppingSection {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+
+.shoppingSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+
+.shoppingSectionHeader h2 {
+    margin: 0 0 4px;
+}
+
+
+.shoppingSectionHeader p {
+    margin: 0;
+    color: var(--heading);
+    opacity: 0.75;
+    font-size: 0.9rem;
+}
+
+
+.shoppingSectionHeader button {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+
+.secondaryShoppingButton {
+    background: var(--tag);
+    color: var(--text);
+    box-shadow: none;
+}
+
+
+.secondaryShoppingButton:hover {
+    background: var(--button);
+    color: white;
+}
+
+
+/* =========================================================
+   MEAL SELECTION
+========================================================= */
+
+#shoppingMealSelection {
+    width: 100%;
+}
+
+
+.shoppingDayHeading {
+    margin: 20px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 1.05rem;
+}
+
+
+.shoppingDayHeading:first-child {
+    margin-top: 0;
+}
+
+
+.shoppingMealOption {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 65px;
+    margin: 8px 0;
+    padding: 12px 14px;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+
+.shoppingMealOption:hover {
+    transform: translateY(-1px);
+    background: var(--meal);
+}
+
+
+.shoppingMealOption input {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+
+.shoppingMealContent {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+
+.shoppingMealContent strong {
+    color: var(--text);
+    font-size: 1rem;
+}
+
+
+.shoppingMealContent span {
+    margin-top: 3px;
+    color: var(--heading);
+    font-size: 0.82rem;
+}
+
+
+/* =========================================================
+   SHOPPING LIST
+========================================================= */
+
+#shoppingList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+.shoppingListSectionHeading {
+    margin: 20px 0 5px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 1.05rem;
+}
+
+
+.shoppingListSectionHeading:first-child {
+    margin-top: 0;
+}
+
+
+.shoppingListItem {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    min-height: 60px;
+    padding: 10px 12px;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: left;
+    transition: 0.2s ease;
+}
+
+
+.shoppingListItem:hover {
+    background: var(--meal);
+}
+
+
+.shoppingCheckbox {
+    width: 22px !important;
+    height: 22px !important;
+    margin: 0 !important;
+    cursor: pointer;
+    accent-color: var(--button);
+}
+
+
+.shoppingItemContent {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+
+.shoppingItemName {
+    color: var(--text);
+    font-weight: 700;
+    word-break: break-word;
+}
+
+
+.shoppingItemMeasurement {
+    margin-top: 3px;
+    color: var(--heading);
+    font-size: 0.88rem;
+}
+
+
+.shoppingItemActions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+
+.shoppingItemActions button {
+    margin: 0;
+    padding: 7px 10px;
+    font-size: 0.78rem;
+}
+
+
+.shoppingEditButton {
+    background: var(--tag);
+    color: var(--text);
+    box-shadow: none;
+}
+
+
+.shoppingEditButton:hover {
+    background: var(--button);
+    color: white;
+}
+
+
+.shoppingDeleteButton {
+    background: var(--button-hover);
+    font-size: 0.78rem;
+}
+
+
+.emptyShoppingMessage {
+    padding: 30px 15px;
+    color: var(--heading);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+
+.noPlannedMealsMessage {
+    padding: 15px;
+    margin: 0;
+    color: var(--heading);
+    opacity: 0.75;
+}
+
+
+/* =========================================================
+   THREE-STATE SHOPPING ITEMS
+========================================================= */
+
+/*
+   Bought:
+   The checkbox is checked and the item becomes faded.
+
+   Not in store:
+   The checkbox becomes indeterminate and
+   the item gets a softer crossed-out appearance.
+*/
+
+
+.shoppingItemBought {
+    opacity: 0.6;
+}
+
+
+.shoppingItemBought .shoppingItemName {
+    text-decoration: line-through;
+}
+
+
+.shoppingItemUnavailable {
+    opacity: 0.55;
+}
+
+
+.shoppingItemUnavailable .shoppingItemName {
+    text-decoration: line-through;
+    text-decoration-style: dashed;
+}
+
+
+/*
+   Native indeterminate checkbox styling
+*/
+
+.shoppingCheckbox:indeterminate {
+    accent-color: var(--heading);
+}
+
+
+/* =========================================================
+   ADD / EDIT ITEM MODAL
+========================================================= */
+
+#shoppingItemName {
+    width: 100%;
+    min-height: 52px;
+    padding: 15px;
+    margin: 10px 0 12px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    background: var(--card);
+    color: var(--text);
+    font-size: 1rem;
+}
+
+
+#shoppingItemName:focus {
+    border-color: var(--button);
+}
+
+
+.shoppingItemInputs {
+    display: grid;
+    grid-template-columns: 1fr 110px;
+    gap: 8px;
+}
+
+
+.shoppingItemInputs input,
+.shoppingItemInputs select {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    background: var(--card);
+    color: var(--text);
+    font-size: 1rem;
+}
+
+
+.shoppingItemInputs input:focus,
+.shoppingItemInputs select:focus {
+    border-color: var(--button);
+}
+
+
+/* =========================================================
+   MOBILE SHOPPING
+========================================================= */
+
+@media (max-width: 600px) {
+
+    #shoppingPage {
+        width: 100%;
+    }
+
+
+    .shoppingSection {
+        padding: 15px;
+        border-radius: 16px;
+    }
+
+
+    .shoppingSectionHeader {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+
+    .shoppingSectionHeader button {
+        width: 100%;
+    }
+
+
+    .shoppingListItem {
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 9px;
+        padding: 11px;
+    }
+
+
+    .shoppingItemActions {
+        grid-column: 2;
+        width: 100%;
+    }
+
+
+    .shoppingItemActions button {
+        flex: 1;
+        min-height: 42px;
+    }
+
+
+    .shoppingItemInputs {
+        grid-template-columns: 1fr 90px;
+    }
+
+
+    .shoppingMealOption {
+        min-height: 62px;
+    }
+
+}
+
