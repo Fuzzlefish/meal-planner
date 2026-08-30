@@ -25,6 +25,9 @@ const selectAllMealsButton =
 const addShoppingItemButton =
     document.querySelector("#addShoppingItemButton");
 
+const shoppingListViewControls =
+    document.querySelector(".shoppingListViewControls");
+
 
 /* =========================================================
 MODAL
@@ -138,6 +141,27 @@ function saveShoppingItems(items) {
 }
 
 
+function getMealPlanLeftovers() {
+
+    return JSON.parse(
+        localStorage.getItem("mealPlanLeftovers")
+    ) || {};
+}
+
+
+function getShoppingListView() {
+
+    return localStorage.getItem("shoppingListView") ||
+        "grouped";
+}
+
+
+function saveShoppingListView(view) {
+
+    localStorage.setItem("shoppingListView", view);
+}
+
+
 /* =========================================================
 MEAL INGREDIENT STATUS STORAGE
 ========================================================= */
@@ -218,6 +242,8 @@ function getPlannedMeals() {
     const meals =
         getMeals();
 
+    const leftovers = getMealPlanLeftovers();
+
     const plannedMeals = [];
 
 
@@ -234,6 +260,10 @@ function getPlannedMeals() {
 
             ["lunch", "dinner"].forEach(
                 (mealType) => {
+
+                    if (leftovers[`${day}-${mealType}`] === true) {
+                        return;
+                    }
 
                     const mealId =
                         dayPlan[mealType];
@@ -1276,57 +1306,152 @@ function renderShoppingList() {
     }
 
 
-    if (
-        mealIngredients.length > 0
-    ) {
+    if (getShoppingListView() === "full") {
 
-        renderSectionHeading(
-            "From Your Meals"
+        mealIngredients.forEach(ingredient =>
+            renderMealShoppingItem(ingredient, shoppingList)
         );
 
-
-        mealIngredients.forEach(
-            (ingredient) => {
-
-                renderMealShoppingItem(
-                    ingredient
-                );
-
-            }
+        manualItems.forEach(item =>
+            renderManualShoppingItem(item, shoppingList)
         );
 
+    } else {
+
+        renderCategorisedShoppingList(
+            mealIngredients,
+            manualItems
+        );
     }
 
 
-    if (
-        manualItems.length > 0
-    ) {
-
-        renderSectionHeading(
-            "My Items"
-        );
-
-
-        manualItems.forEach(
-            (item) => {
-
-                renderManualShoppingItem(
-                    item
-                );
-
-            }
-        );
-
-    }
+    updateShoppingListViewControls();
 
 }
+
+
+/* =========================================================
+SHOPPING LIST CATEGORIES
+========================================================= */
+
+function getShoppingCategory(name) {
+
+    const value = String(name || "").toLowerCase();
+
+    if (/chicken|beef|pork|lamb|turkey|bacon|sausage|fish|salmon|tuna|prawn/.test(value)) {
+        return "Meat & Fish";
+    }
+
+    if (/milk|cheese|butter|yoghurt|yogurt|cream|egg/.test(value)) {
+        return "Dairy & Eggs";
+    }
+
+    if (/bread|bagel|wrap|pitta|pita|roll|pastry|tortilla/.test(value)) {
+        return "Bakery";
+    }
+
+    if (/frozen|ice cream|chips|peas|pizza/.test(value)) {
+        return "Frozen";
+    }
+
+    if (/tomato|onion|pepper|potato|carrot|broccoli|lettuce|salad|spinach|mushroom|cucumber|garlic|ginger|avocado|lemon|lime|apple|banana|berry|berries|grape|orange/.test(value)) {
+        return "Fruit & Vegetables";
+    }
+
+    if (/tin|canned|beans|chickpea|lentil|stock|soup/.test(value)) {
+        return "Tins & Jars";
+    }
+
+    if (/rice|pasta|noodle|flour|sugar|oil|vinegar|herb|spice|salt|peppercorn|cereal|sauce/.test(value)) {
+        return "Cupboard";
+    }
+
+    return "Other";
+}
+
+
+function renderCategorisedShoppingList(mealIngredients, manualItems) {
+
+    const categories = new Map();
+
+    function add(category, type, item) {
+        if (!categories.has(category)) {
+            categories.set(category, []);
+        }
+
+        categories.get(category).push({ type, item });
+    }
+
+    mealIngredients.forEach(item =>
+        add(getShoppingCategory(item.name), "meal", item)
+    );
+
+    manualItems.forEach(item =>
+        add(getShoppingCategory(item.name), "manual", item)
+    );
+
+    const order = [
+        "Fruit & Vegetables",
+        "Meat & Fish",
+        "Dairy & Eggs",
+        "Bakery",
+        "Frozen",
+        "Tins & Jars",
+        "Cupboard",
+        "Other"
+    ];
+
+    order.forEach(category => {
+        const items = categories.get(category);
+
+        if (!items || items.length === 0) {
+            return;
+        }
+
+        renderSectionHeading(category, shoppingList);
+
+        items.forEach(({ type, item }) => {
+            if (type === "meal") {
+                renderMealShoppingItem(item, shoppingList);
+            } else {
+                renderManualShoppingItem(item, shoppingList);
+            }
+        });
+    });
+}
+
+
+function updateShoppingListViewControls() {
+
+    const view = getShoppingListView();
+
+    shoppingListViewControls?.querySelectorAll("button")
+        .forEach(button => {
+            const active = button.dataset.shoppingView === view;
+            button.classList.toggle("active", active);
+            button.setAttribute("aria-pressed", String(active));
+        });
+}
+
+
+shoppingListViewControls?.addEventListener("click", event => {
+
+    const button = event.target.closest("button[data-shopping-view]");
+
+    if (!button) {
+        return;
+    }
+
+    saveShoppingListView(button.dataset.shoppingView);
+    renderShoppingList();
+});
 
 
 /* =========================================================
 SECTION HEADING
 ========================================================= */
 
-function renderSectionHeading(text) {
+function renderSectionHeading(text, container = shoppingList) {
 
     const heading =
         document.createElement("h3");
@@ -1340,7 +1465,7 @@ function renderSectionHeading(text) {
         text;
 
 
-    shoppingList.appendChild(
+    container.appendChild(
         heading
     );
 
@@ -1352,7 +1477,8 @@ DISPLAY MEAL INGREDIENT
 ========================================================= */
 
 function renderMealShoppingItem(
-    ingredient
+    ingredient,
+    container = shoppingList
 ) {
 
     const item =
@@ -1467,7 +1593,7 @@ function renderMealShoppingItem(
     );
 
 
-    shoppingList.appendChild(
+    container.appendChild(
         item
     );
 
@@ -1479,7 +1605,8 @@ DISPLAY MANUAL ITEM
 ========================================================= */
 
 function renderManualShoppingItem(
-    itemData
+    itemData,
+    container = shoppingList
 ) {
 
     const item =
@@ -1638,7 +1765,7 @@ function renderManualShoppingItem(
     );
 
 
-    shoppingList.appendChild(
+    container.appendChild(
         item
     );
 

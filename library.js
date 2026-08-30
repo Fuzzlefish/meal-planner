@@ -988,11 +988,19 @@ function displayMeals() {
                 );
 
 
+            const shareButton =
+                createButton(
+                    "Share",
+                    () => shareMeal(meal)
+                );
+
+
             mealItem.append(
                 title,
                 tagContainer,
                 ingredientsButton,
                 editButton,
+                shareButton,
                 deleteButton
             );
 
@@ -1073,6 +1081,169 @@ function createButton(
 
 
     return button;
+}
+
+
+/* =========================================================
+   SHARE / IMPORT MEALS
+========================================================= */
+
+function getShareableMeal(meal) {
+
+    return {
+        name: meal.name,
+        tags: meal.tags || [],
+        ingredients: (meal.ingredients || []).map(ingredient => ({
+            amount: ingredient.amount || "",
+            unit: ingredient.unit || "",
+            name: ingredient.name || ""
+        })),
+        videoLink: meal.videoLink || ""
+    };
+}
+
+
+function encodeMealForShare(meal) {
+
+    const bytes = new TextEncoder().encode(JSON.stringify(meal));
+    let binary = "";
+
+    bytes.forEach(byte => {
+        binary += String.fromCharCode(byte);
+    });
+
+    return btoa(binary)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+}
+
+
+function decodeSharedMeal(value) {
+
+    try {
+        const base64 = value
+            .replace(/-/g, "+")
+            .replace(/_/g, "/") +
+            "=".repeat((4 - (value.length % 4)) % 4);
+        const bytes = Uint8Array.from(atob(base64), char =>
+            char.charCodeAt(0)
+        );
+        const meal = JSON.parse(new TextDecoder().decode(bytes));
+
+        if (
+            !meal ||
+            typeof meal.name !== "string" ||
+            !meal.name.trim() ||
+            !Array.isArray(meal.ingredients)
+        ) {
+            return null;
+        }
+
+        return meal;
+
+    } catch {
+        return null;
+    }
+}
+
+
+async function shareMeal(meal) {
+
+    const link = `${location.origin}${location.pathname}` +
+        `#import-meal=${encodeMealForShare(getShareableMeal(meal))}`;
+
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: meal.name,
+                text: `Add ${meal.name} to your Meal Planner`,
+                url: link
+            });
+            return;
+        }
+
+        await navigator.clipboard.writeText(link);
+        alert("Meal link copied to your clipboard.");
+
+    } catch (error) {
+        if (error.name !== "AbortError") {
+            window.prompt("Copy this meal link:", link);
+        }
+    }
+}
+
+
+function clearSharedMealHash() {
+
+    history.replaceState(
+        null,
+        "",
+        `${location.pathname}${location.search}`
+    );
+}
+
+
+function offerSharedMealImport() {
+
+    const prefix = "#import-meal=";
+
+    if (!location.hash.startsWith(prefix)) {
+        return;
+    }
+
+    const meal = decodeSharedMeal(location.hash.slice(prefix.length));
+
+    if (!meal) {
+        clearSharedMealHash();
+        alert("That meal link could not be read.");
+        return;
+    }
+
+    const modal = document.createElement("div");
+    modal.className = "mealModal";
+    modal.style.display = "flex";
+
+    const content = document.createElement("div");
+    content.className = "modalContent";
+
+    const title = document.createElement("h2");
+    title.textContent = "Add shared meal?";
+
+    const message = document.createElement("p");
+    message.textContent =
+        `Add “${meal.name.trim()}” to your Meal Library?`;
+
+    const details = document.createElement("p");
+    details.textContent =
+        `${meal.ingredients.length} ingredient${
+            meal.ingredients.length === 1 ? "" : "s"
+        } will be imported.`;
+
+    const buttons = document.createElement("div");
+    buttons.className = "modalButtons";
+
+    const cancel = createButton("Cancel", () => {
+        modal.remove();
+        clearSharedMealHash();
+    });
+
+    const confirmImport = createButton("Add Meal", () => {
+        const meals = getMeals();
+        meals.push({
+            ...getShareableMeal(meal),
+            id: crypto.randomUUID()
+        });
+        saveMeals(meals);
+        modal.remove();
+        clearSharedMealHash();
+        displayMeals();
+    });
+
+    buttons.append(cancel, confirmImport);
+    content.append(title, message, details, buttons);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
 }
 
 
@@ -1575,3 +1746,4 @@ document.addEventListener(
 ========================================================= */
 
 displayMeals();
+offerSharedMealImport();

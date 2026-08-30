@@ -99,6 +99,30 @@ function saveMealPlan(plan) {
 }
 
 
+/* Leftovers are kept separately so existing saved meal plans stay compatible. */
+function getMealPlanLeftovers() {
+
+    return JSON.parse(
+        localStorage.getItem("mealPlanLeftovers")
+    ) || {};
+}
+
+
+function saveMealPlanLeftovers(leftovers) {
+
+    localStorage.setItem(
+        "mealPlanLeftovers",
+        JSON.stringify(leftovers)
+    );
+}
+
+
+function getMealPlanSlotKey(day, mealType) {
+
+    return `${day}-${mealType}`;
+}
+
+
 function getPresets() {
     return JSON.parse(
         localStorage.getItem("weekPresets")
@@ -360,12 +384,6 @@ function selectMeal(meal) {
         return;
     }
 
-    displaySavedMeal(
-        selectedMealSection,
-        meal
-    );
-
-
     const plan = getMealPlan();
 
     if (!plan[selectedDay]) {
@@ -378,7 +396,16 @@ function selectMeal(meal) {
     plan[selectedDay][mealType] =
         meal.id;
 
+    const leftovers = getMealPlanLeftovers();
+    delete leftovers[getMealPlanSlotKey(selectedDay, mealType)];
+    saveMealPlanLeftovers(leftovers);
+
     saveMealPlan(plan);
+
+    displaySavedMeal(
+        selectedMealSection,
+        meal
+    );
 
 
     if (mealModal) {
@@ -445,6 +472,13 @@ function removeMealFromPlan() {
     }
 
     saveMealPlan(plan);
+
+    const leftovers = getMealPlanLeftovers();
+    delete leftovers[getMealPlanSlotKey(
+        selectedDay,
+        selectedMealType.toLowerCase()
+    )];
+    saveMealPlanLeftovers(leftovers);
 
 }
 
@@ -544,6 +578,45 @@ function displaySavedMeal(section, meal) {
 
     listItem.textContent = meal.name;
 
+    const dayName = section.closest(".day")?.id;
+    const mealType = section.querySelector("h3")
+        ?.textContent.toLowerCase();
+    const leftoverKey = getMealPlanSlotKey(dayName, mealType);
+    const leftovers = getMealPlanLeftovers();
+
+    const leftoversLabel = document.createElement("label");
+    leftoversLabel.className = "leftoversToggle";
+
+    const leftoversCheckbox = document.createElement("input");
+    leftoversCheckbox.type = "checkbox";
+    leftoversCheckbox.checked = leftovers[leftoverKey] === true;
+
+    leftoversLabel.append(
+        leftoversCheckbox,
+        document.createTextNode(" Leftovers from another meal")
+    );
+
+    listItem.classList.toggle(
+        "isLeftovers",
+        leftoversCheckbox.checked
+    );
+
+    leftoversCheckbox.addEventListener("change", () => {
+        const updated = getMealPlanLeftovers();
+
+        if (leftoversCheckbox.checked) {
+            updated[leftoverKey] = true;
+        } else {
+            delete updated[leftoverKey];
+        }
+
+        saveMealPlanLeftovers(updated);
+        listItem.classList.toggle(
+            "isLeftovers",
+            leftoversCheckbox.checked
+        );
+    });
+
 
     const ingredientsButton =
         document.createElement("button");
@@ -607,9 +680,19 @@ function displaySavedMeal(section, meal) {
 
             saveMealPlan(plan);
 
+            const leftovers = getMealPlanLeftovers();
+            delete leftovers[getMealPlanSlotKey(dayName, mealType)];
+            saveMealPlanLeftovers(leftovers);
+
         }
     );
 
+
+    listItem.appendChild(
+        document.createElement("br")
+    );
+
+    listItem.appendChild(leftoversLabel);
 
     listItem.appendChild(
         document.createElement("br")
@@ -710,6 +793,10 @@ function displayDeletedMeal(
             }
 
             saveMealPlan(plan);
+
+            const leftovers = getMealPlanLeftovers();
+            delete leftovers[getMealPlanSlotKey(dayName, mealType)];
+            saveMealPlanLeftovers(leftovers);
 
             mealList.innerHTML = "";
 

@@ -1308,6 +1308,26 @@ body[data-theme="red"] {
     color: white;
 }
 
+.shoppingListViewControls {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 16px;
+}
+
+.shoppingListViewControls button {
+    flex: 1;
+    margin: 0;
+    background: var(--secondary);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: none;
+}
+
+.shoppingListViewControls button.active {
+    background: var(--button);
+    color: white;
+}
+
 
 /* =========================================================
    MEAL SELECTION
@@ -1424,6 +1444,22 @@ body[data-theme="red"] {
 
 .shoppingListItem:hover {
     background: var(--meal);
+}
+
+.leftoversToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 8px 0 2px;
+    padding: 6px 8px;
+    background: var(--tag);
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.meal li.isLeftovers {
+    opacity: 0.8;
+    border-left: 4px solid var(--button);
 }
 
 
