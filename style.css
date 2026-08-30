@@ -1741,3 +1741,175 @@ MOBILE MEAL LINKS
 
 }
 
+/* =========================================================
+   INGREDIENT NORMALISATION
+========================================================= */
+
+.ingredientNameWrapper {
+    position: relative;
+    min-width: 0;
+}
+
+.ingredientNameWrapper input {
+    width: 100%;
+}
+
+
+/* =========================================================
+   INGREDIENT SUGGESTIONS
+========================================================= */
+
+.ingredientSuggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.ingredientSuggestionTitle {
+    padding: 4px 6px;
+    color: var(--heading);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.ingredientSuggestion {
+    width: 100%;
+    margin: 0;
+    padding: 9px 10px;
+    background: var(--secondary);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: none;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.ingredientSuggestion:hover {
+    background: var(--meal);
+    color: var(--text);
+    transform: none;
+}
+
+
+/* =========================================================
+   NORMALISATION MODAL
+========================================================= */
+
+.ingredientNormalisationContent {
+    max-width: 600px;
+}
+
+.normalisationIntro {
+    color: var(--heading);
+    opacity: 0.8;
+    line-height: 1.5;
+}
+
+#normalisationMappings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.normalisationCard {
+    padding: 14px;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: left;
+}
+
+.normalisationCardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.normalisationCardHeader strong {
+    color: var(--heading);
+    font-size: 1rem;
+}
+
+.normalisationAliases {
+    margin-top: 6px;
+    color: var(--text);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.deleteNormalisationButton {
+    margin: 0;
+    padding: 7px 10px;
+    background: var(--button-hover);
+    font-size: 0.8rem;
+}
+
+.deleteNormalisationButton:hover {
+    background: #a84d45;
+}
+
+#normalisationCanonical,
+#normalisationAliases {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px;
+    margin: 6px 0;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    background: var(--card);
+    color: var(--text);
+    font-size: 1rem;
+}
+
+#normalisationCanonical:focus,
+#normalisationAliases:focus {
+    border-color: var(--button);
+}
+
+#saveNormalisationButton,
+#normaliseExistingMealsButton,
+#closeNormalisationButton {
+    width: 100%;
+    margin: 6px 0;
+}
+
+.emptyNormalisationMessage {
+    padding: 20px;
+    color: var(--heading);
+    opacity: 0.7;
+    font-style: italic;
+    text-align: center;
+}
+
+
+/* =========================================================
+   MOBILE NORMALISATION
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .ingredientSuggestions {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        width: auto;
+    }
+
+    .normalisationCardHeader {
+        align-items: flex-start;
+    }
+
+}

@@ -1,403 +1,1092 @@
-const addMealButton = document.querySelector("#addMealButton");
-const addMealForm = document.querySelector("#addMealForm");
-const newMealName = document.querySelector("#newMealName");
-const cancelMealButton = document.querySelector("#cancelMealButton");
-const saveMealButton = document.querySelector("#saveMealButton");
-const mealList = document.querySelector("#mealList");
+/* =========================================================
+   LIBRARY
+========================================================= */
 
-const editMealModal = document.querySelector("#editMealModal");
-const editMealName = document.querySelector("#editMealName");
-const cancelEditButton = document.querySelector("#cancelEditButton");
-const saveEditButton = document.querySelector("#saveEditButton");
 
-const deleteMealModal = document.querySelector("#deleteMealModal");
-const deleteMealMessage = document.querySelector("#deleteMealMessage");
-const cancelDeleteButton = document.querySelector("#cancelDeleteButton");
-const confirmDeleteButton = document.querySelector("#confirmDeleteButton");
+/* =========================================================
+   DOM
+========================================================= */
 
-const newMealIngredients = document.querySelector("#newMealIngredients");
-const editMealIngredients = document.querySelector("#editMealIngredients");
-const addIngredientButton = document.querySelector("#addIngredientButton");
-const addEditIngredientButton = document.querySelector("#addEditIngredientButton");
+const addMealButton =
+    document.querySelector("#addMealButton");
 
-const ingredientsModal = document.querySelector("#ingredientsModal");
-const ingredientsModalTitle = document.querySelector("#ingredientsModalTitle");
-const ingredientsList = document.querySelector("#ingredientsList");
-const closeIngredientsButton = document.querySelector("#closeIngredientsButton");
+const addMealForm =
+    document.querySelector("#addMealForm");
+
+const newMealName =
+    document.querySelector("#newMealName");
+
+const cancelMealButton =
+    document.querySelector("#cancelMealButton");
+
+const saveMealButton =
+    document.querySelector("#saveMealButton");
+
+const mealList =
+    document.querySelector("#mealList");
+
+
+const editMealModal =
+    document.querySelector("#editMealModal");
+
+const editMealName =
+    document.querySelector("#editMealName");
+
+const cancelEditButton =
+    document.querySelector("#cancelEditButton");
+
+const saveEditButton =
+    document.querySelector("#saveEditButton");
+
+
+const deleteMealModal =
+    document.querySelector("#deleteMealModal");
+
+const deleteMealMessage =
+    document.querySelector("#deleteMealMessage");
+
+const cancelDeleteButton =
+    document.querySelector("#cancelDeleteButton");
+
+const confirmDeleteButton =
+    document.querySelector("#confirmDeleteButton");
+
+
+const newMealIngredients =
+    document.querySelector("#newMealIngredients");
+
+const editMealIngredients =
+    document.querySelector("#editMealIngredients");
+
+const addIngredientButton =
+    document.querySelector("#addIngredientButton");
+
+const addEditIngredientButton =
+    document.querySelector("#addEditIngredientButton");
+
+
+const ingredientsModal =
+    document.querySelector("#ingredientsModal");
+
+const ingredientsModalTitle =
+    document.querySelector("#ingredientsModalTitle");
+
+const ingredientsList =
+    document.querySelector("#ingredientsList");
+
+const closeIngredientsButton =
+    document.querySelector("#closeIngredientsButton");
+
+
+const newMealVideoLink =
+    document.querySelector("#newMealVideoLink");
+
+const editMealVideoLink =
+    document.querySelector("#editMealVideoLink");
+
 
 let editingMealId = null;
 let deletingMealId = null;
 
 
-/* =========================
+/* =========================================================
+   NORMALISATION MANAGER BUTTON
+========================================================= */
+
+if (addMealButton) {
+
+    const normalisationButton =
+        document.createElement("button");
+
+    normalisationButton.type =
+        "button";
+
+    normalisationButton.textContent =
+        "Ingredient Cleanup";
+
+    normalisationButton.className =
+        "secondaryShoppingButton";
+
+    normalisationButton.addEventListener(
+        "click",
+        openNormalisationManager
+    );
+
+    addMealButton.parentNode.insertBefore(
+        normalisationButton,
+        addMealButton.nextSibling
+    );
+}
+
+
+/* =========================================================
    STORAGE
-========================= */
+========================================================= */
 
 function getMeals() {
-    return JSON.parse(localStorage.getItem("meals")) || [];
+
+    return JSON.parse(
+        localStorage.getItem("meals")
+    ) || [];
 }
+
 
 function saveMeals(meals) {
-    localStorage.setItem("meals", JSON.stringify(meals));
+
+    localStorage.setItem(
+        "meals",
+        JSON.stringify(meals)
+    );
 }
 
 
+/* =========================================================
+   ADD MEAL
+========================================================= */
 
-/* =========================
-ADD MEAL
-========================= */
+addMealButton?.addEventListener(
+    "click",
+    () => {
 
-addMealButton?.addEventListener("click", () => {
-    addMealForm.style.display = "block";
+        addMealForm.style.display =
+            "block";
 
-    // Start tags closed
-    if (tagsSection) {
-        tagsSection.classList.add("collapsed");
+
+        if (tagsSection) {
+
+            tagsSection.classList.add(
+                "collapsed"
+            );
+        }
+
+
+        if (tagArrow) {
+
+            tagArrow.textContent =
+                "▶";
+        }
+
+
+        newMealName.focus();
     }
+);
 
-    if (tagArrow) {
-        tagArrow.textContent = "▶";
+
+cancelMealButton?.addEventListener(
+    "click",
+    () => {
+
+        closeAddMealForm();
     }
+);
 
-    newMealName.focus();
-});
-
-cancelMealButton?.addEventListener("click", () => {
-    closeAddMealForm();
-});
 
 function closeAddMealForm() {
-    addMealForm.style.display = "none";
-    newMealName.value = "";
+
+    addMealForm.style.display =
+        "none";
+
+    newMealName.value =
+        "";
 
     clearTagCheckboxes();
 
-    newMealIngredients.innerHTML = "";
+    newMealIngredients.innerHTML =
+        "";
+
+    if (newMealVideoLink) {
+
+        newMealVideoLink.value =
+            "";
+    }
 }
 
-addIngredientButton?.addEventListener("click", () => {
-    addIngredientRow(newMealIngredients);
-});
 
-saveMealButton?.addEventListener("click", () => {
-    const mealName = newMealName.value.trim();
+/* =========================================================
+   ADD INGREDIENT
+========================================================= */
 
-    if (!mealName) {
-        alert("Please enter a meal name.");
-        return;
+addIngredientButton?.addEventListener(
+    "click",
+    () => {
+
+        addIngredientRow(
+            newMealIngredients
+        );
     }
-
-    const meals = getMeals();
-
-    meals.push({
-        id: crypto.randomUUID(),
-        name: mealName,
-        tags: getSelectedTags(),
-        ingredients: getIngredients(newMealIngredients)
-    });
-
-    saveMeals(meals);
-    closeAddMealForm();
-    displayMeals();
-});
+);
 
 
+/* =========================================================
+   SAVE NEW MEAL
+========================================================= */
+
+saveMealButton?.addEventListener(
+    "click",
+    () => {
+
+        const mealName =
+            newMealName.value.trim();
 
 
-/* =========================
-   INGREDIENTS
-========================= */
+        if (!mealName) {
+
+            alert(
+                "Please enter a meal name."
+            );
+
+            return;
+        }
+
+
+        const meals =
+            getMeals();
+
+
+        const ingredients =
+            getIngredients(
+                newMealIngredients
+            );
+
+
+        const meal = {
+
+            id:
+                crypto.randomUUID(),
+
+            name:
+                mealName,
+
+            tags:
+                getSelectedTags(),
+
+            ingredients:
+                ingredients,
+
+            videoLink:
+                newMealVideoLink
+                    ? newMealVideoLink.value.trim()
+                    : ""
+        };
+
+
+        meals.push(meal);
+
+
+        saveMeals(meals);
+
+        closeAddMealForm();
+
+        displayMeals();
+    }
+);
+
+
+/* =========================================================
+   INGREDIENT UNITS
+========================================================= */
 
 const ingredientUnits = [
+
     "",
+
     "g",
+
     "kg",
+
     "ml",
+
     "L",
+
     "tsp",
+
     "tbsp",
+
     "cup",
+
     "piece",
+
     "clove",
+
     "slice"
 ];
 
 
-function addIngredientRow(container, ingredient = {}) {
-    const row = document.createElement("div");
-    row.className = "ingredientRow";
+/* =========================================================
+   ADD INGREDIENT ROW
+========================================================= */
 
-    /* Amount */
-    const amount = document.createElement("input");
+function addIngredientRow(
+    container,
+    ingredient = {}
+) {
 
-    amount.type = "number";
-    amount.min = "0";
-    amount.step = "any";
-    amount.placeholder = "Amount";
-    amount.value = ingredient.amount || "";
+    const row =
+        document.createElement("div");
 
-
-    /* Unit */
-    const unit = document.createElement("select");
-
-    ingredientUnits.forEach((unitName) => {
-        const option = document.createElement("option");
-
-        option.value = unitName;
-        option.textContent = unitName || "Unit";
-
-        unit.appendChild(option);
-    });
-
-    unit.value = ingredient.unit || "";
+    row.className =
+        "ingredientRow";
 
 
-    /* Ingredient name */
-    const name = document.createElement("input");
+    /* =====================================================
+       AMOUNT
+    ===================================================== */
 
-    name.type = "text";
-    name.placeholder = "Ingredient";
-    name.value = ingredient.name || "";
+    const amount =
+        document.createElement("input");
+
+    amount.type =
+        "number";
+
+    amount.min =
+        "0";
+
+    amount.step =
+        "any";
+
+    amount.placeholder =
+        "Amount";
+
+    amount.value =
+        ingredient.amount || "";
 
 
-    /* Remove button */
-    const remove = document.createElement("button");
+    /* =====================================================
+       UNIT
+    ===================================================== */
 
-    remove.type = "button";
-    remove.className = "removeIngredientButton";
-    remove.textContent = "×";
+    const unit =
+        document.createElement("select");
 
-    remove.addEventListener("click", () => {
-        row.remove();
-    });
 
+    ingredientUnits.forEach(
+        unitName => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                unitName;
+
+            option.textContent =
+                unitName || "Unit";
+
+            unit.appendChild(
+                option
+            );
+        }
+    );
+
+
+    unit.value =
+        ingredient.unit || "";
+
+
+    /* =====================================================
+       INGREDIENT NAME
+    ===================================================== */
+
+    const nameWrapper =
+        document.createElement("div");
+
+    nameWrapper.className =
+        "ingredientNameWrapper";
+
+
+    const name =
+        document.createElement("input");
+
+    name.type =
+        "text";
+
+    name.placeholder =
+        "Ingredient";
+
+    name.value =
+        ingredient.name || "";
+
+    name.autocomplete =
+        "off";
+
+
+    const suggestionBox =
+        document.createElement("div");
+
+    suggestionBox.className =
+        "ingredientSuggestions";
+
+
+    nameWrapper.append(
+        name,
+        suggestionBox
+    );
+
+
+    /* =====================================================
+       REMOVE
+    ===================================================== */
+
+    const remove =
+        document.createElement("button");
+
+    remove.type =
+        "button";
+
+    remove.className =
+        "removeIngredientButton";
+
+    remove.textContent =
+        "×";
+
+
+    remove.addEventListener(
+        "click",
+        () => {
+
+            row.remove();
+        }
+    );
+
+
+    /* =====================================================
+       BUILD ROW
+    ===================================================== */
 
     row.append(
         amount,
         unit,
-        name,
+        nameWrapper,
         remove
     );
 
-    container.appendChild(row);
+
+    container.appendChild(
+        row
+    );
+
+
+    /* =====================================================
+       ENABLE SUGGESTIONS
+    ===================================================== */
+
+    setupIngredientSuggestions(
+        name,
+        suggestionBox
+    );
 }
 
 
-function getIngredients(container) {
-    return [...container.querySelectorAll(".ingredientRow")]
-        .map((row) => {
-            const inputs = row.querySelectorAll("input");
+/* =========================================================
+   INGREDIENT SUGGESTIONS
+========================================================= */
 
-            return {
-                amount: inputs[0].value.trim(),
-                unit: row.querySelector("select").value,
-                name: inputs[1].value.trim()
-            };
-        })
-        .filter((ingredient) => ingredient.name);
+function setupIngredientSuggestions(
+    input,
+    suggestionBox
+) {
+
+    let timeout =
+        null;
+
+
+    input.addEventListener(
+        "input",
+        () => {
+
+            clearTimeout(
+                timeout
+            );
+
+
+            timeout =
+                setTimeout(
+                    () => {
+
+                        const value =
+                            input.value.trim();
+
+
+                        if (
+                            value.length < 2
+                        ) {
+
+                            suggestionBox.innerHTML =
+                                "";
+
+                            return;
+                        }
+
+
+                        const suggestions =
+                            findIngredientSuggestions(
+                                value
+                            );
+
+
+                        suggestionBox.innerHTML =
+                            "";
+
+
+                        if (
+                            suggestions.length === 0
+                        ) {
+
+                            return;
+                        }
+
+
+                        const title =
+                            document.createElement(
+                                "div"
+                            );
+
+                        title.className =
+                            "ingredientSuggestionTitle";
+
+                        title.textContent =
+                            "Did you mean?";
+
+
+                        suggestionBox.appendChild(
+                            title
+                        );
+
+
+                        suggestions.forEach(
+                            suggestion => {
+
+                                const button =
+                                    document.createElement(
+                                        "button"
+                                    );
+
+
+                                button.type =
+                                    "button";
+
+
+                                button.className =
+                                    "ingredientSuggestion";
+
+
+                                button.textContent =
+                                    getIngredientDisplayName(
+                                        suggestion
+                                    );
+
+
+                                button.addEventListener(
+                                    "click",
+                                    () => {
+
+                                        const displayName =
+                                            getIngredientDisplayName(
+                                                suggestion
+                                            );
+
+
+                                        input.value =
+                                            displayName;
+
+
+                                        suggestionBox.innerHTML =
+                                            "";
+
+
+                                        input.dispatchEvent(
+                                            new Event(
+                                                "change"
+                                            )
+                                        );
+                                    }
+                                );
+
+
+                                suggestionBox.appendChild(
+                                    button
+                                );
+                            }
+                        );
+
+                    },
+                    200
+                );
+        }
+    );
+
+
+    /* =====================================================
+       CLEAR SUGGESTIONS WHEN FOCUS LEAVES
+    ===================================================== */
+
+    input.addEventListener(
+        "blur",
+        () => {
+
+            setTimeout(
+                () => {
+
+                    suggestionBox.innerHTML =
+                        "";
+
+                },
+                200
+            );
+        }
+    );
 }
 
 
-/* =========================
+/* =========================================================
+   GET INGREDIENTS
+========================================================= */
+
+function getIngredients(
+    container
+) {
+
+    return [
+        ...container.querySelectorAll(
+            ".ingredientRow"
+        )
+    ]
+
+        .map(
+            row => {
+
+                const inputs =
+                    row.querySelectorAll(
+                        "input"
+                    );
+
+
+                const rawName =
+                    inputs[1]
+                        ? inputs[1].value.trim()
+                        : "";
+
+
+                /*
+                 * We deliberately don't force
+                 * normalisation here.
+                 *
+                 * This allows the user to type
+                 * whatever they want and then
+                 * use Ingredient Cleanup later.
+                 * later.
+                 */
+
+                return {
+
+                    amount:
+                        inputs[0]
+                            ? inputs[0].value.trim()
+                            : "",
+
+                    unit:
+                        row.querySelector(
+                            "select"
+                        )?.value || "",
+
+                    name:
+                        rawName
+                };
+            }
+        )
+
+        .filter(
+            ingredient =>
+                ingredient.name
+        );
+}
+
+
+/* =========================================================
    TAGS
-========================= */
+========================================================= */
 
 function getSelectedTags() {
-    return [...document.querySelectorAll(".mealTag:checked")]
-        .map((checkbox) => checkbox.value);
+
+    return [
+        ...document.querySelectorAll(
+            ".mealTag:checked"
+        )
+    ]
+
+        .map(
+            checkbox =>
+                checkbox.value
+        );
 }
 
 
 function clearTagCheckboxes() {
-    document.querySelectorAll(".mealTag").forEach((checkbox) => {
-        checkbox.checked = false;
-    });
+
+    document
+        .querySelectorAll(
+            ".mealTag"
+        )
+        .forEach(
+            checkbox => {
+
+                checkbox.checked =
+                    false;
+            }
+        );
 }
 
 
 function getEditTags() {
-    return [...document.querySelectorAll(".editMealTag:checked")]
-        .map((checkbox) => checkbox.value);
+
+    return [
+        ...document.querySelectorAll(
+            ".editMealTag:checked"
+        )
+    ]
+
+        .map(
+            checkbox =>
+                checkbox.value
+        );
 }
 
 
 function createTagElement(tag) {
-    const tagElement = document.createElement("span");
 
-    tagElement.textContent = tag;
-    tagElement.className = "mealTagDisplay";
+    const tagElement =
+        document.createElement(
+            "span"
+        );
 
-    const tagClass = tag
-        .toLowerCase()
-        .replace(/\s+/g, "-");
+    tagElement.textContent =
+        tag;
 
-    tagElement.classList.add(`tag-${tagClass}`);
+    tagElement.className =
+        "mealTagDisplay";
+
+
+    const tagClass =
+        tag
+            .toLowerCase()
+            .replace(
+                /\s+/g,
+                "-"
+            );
+
+
+    tagElement.classList.add(
+        `tag-${tagClass}`
+    );
+
 
     return tagElement;
 }
 
 
-/* =========================
+/* =========================================================
    COLLAPSIBLE TAGS
-========================= */
-
-/* ADD MEAL TAGS */
+========================================================= */
 
 const tagsToggle =
-    document.querySelector("#toggleTagsButton");
+    document.querySelector(
+        "#toggleTagsButton"
+    );
 
 const tagsSection =
-    document.querySelector("#mealTags");
+    document.querySelector(
+        "#mealTags"
+    );
 
 const tagArrow =
-    document.querySelector("#tagArrow");
+    document.querySelector(
+        "#tagArrow"
+    );
 
 
-if (tagsToggle && tagsSection) {
-    tagsToggle.addEventListener("click", () => {
-        const collapsed =
-            tagsSection.classList.toggle("collapsed");
+if (
+    tagsToggle &&
+    tagsSection
+) {
 
-        if (tagArrow) {
-            tagArrow.textContent =
-                collapsed ? "▶" : "▼";
+    tagsToggle.addEventListener(
+        "click",
+        () => {
+
+            const collapsed =
+                tagsSection.classList.toggle(
+                    "collapsed"
+                );
+
+
+            if (tagArrow) {
+
+                tagArrow.textContent =
+                    collapsed
+                        ? "▶"
+                        : "▼";
+            }
         }
-    });
+    );
 }
 
 
-/* EDIT MEAL TAGS */
+/* =========================================================
+   EDIT TAGS
+========================================================= */
 
 const editTagsToggle =
-    document.querySelector("#toggleEditTagsButton");
+    document.querySelector(
+        "#toggleEditTagsButton"
+    );
 
 const editTagsSection =
-    document.querySelector("#editMealTags");
+    document.querySelector(
+        "#editMealTags"
+    );
 
 const editTagArrow =
-    document.querySelector("#editTagArrow");
+    document.querySelector(
+        "#editTagArrow"
+    );
 
 
-if (editTagsToggle && editTagsSection) {
-    editTagsToggle.addEventListener("click", () => {
-        const collapsed =
-            editTagsSection.classList.toggle("collapsed");
+if (
+    editTagsToggle &&
+    editTagsSection
+) {
 
-        if (editTagArrow) {
-            editTagArrow.textContent =
-                collapsed ? "▶" : "▼";
+    editTagsToggle.addEventListener(
+        "click",
+        () => {
+
+            const collapsed =
+                editTagsSection.classList.toggle(
+                    "collapsed"
+                );
+
+
+            if (editTagArrow) {
+
+                editTagArrow.textContent =
+                    collapsed
+                        ? "▶"
+                        : "▼";
+            }
         }
-    });
+    );
 }
 
 
-/* =========================
+/* =========================================================
    DISPLAY MEALS
-========================= */
+========================================================= */
 
 function displayMeals() {
-    mealList.innerHTML = "";
 
-    const meals = getMeals();
+    mealList.innerHTML =
+        "";
 
 
-    if (meals.length === 0) {
-        const message = document.createElement("p");
+    const meals =
+        getMeals();
+
+
+    if (
+        meals.length === 0
+    ) {
+
+        const message =
+            document.createElement(
+                "p"
+            );
 
         message.textContent =
             "You haven't added any meals yet.";
 
-        mealList.appendChild(message);
+        mealList.appendChild(
+            message
+        );
 
         return;
     }
 
 
-    meals.forEach((meal) => {
-        const mealItem =
-            document.createElement("div");
+    meals.forEach(
+        meal => {
 
-        mealItem.className = "mealItem";
+            const mealItem =
+                document.createElement(
+                    "div"
+                );
 
-
-        const title =
-            document.createElement("h3");
-
-        title.textContent = meal.name;
-
-
-        const tagContainer =
-            document.createElement("div");
-
-        tagContainer.className = "mealTags";
+            mealItem.className =
+                "mealItem";
 
 
-        (meal.tags || []).forEach((tag) => {
-            tagContainer.appendChild(
-                createTagElement(tag)
-            );
-        });
+            const title =
+                document.createElement(
+                    "h3"
+                );
+
+            title.textContent =
+                meal.name;
 
 
-        const ingredientsButton =
-            createButton(
-                "View Ingredients",
-                () => openIngredientsModal(meal)
-            );
+            const tagContainer =
+                document.createElement(
+                    "div"
+                );
+
+            tagContainer.className =
+                "mealTags";
 
 
-        const editButton =
-            createButton(
-                "Edit",
-                () => openEditModal(meal.id)
-            );
+            (
+                meal.tags || []
+            ).forEach(
+                tag => {
 
-
-        const deleteButton =
-            createButton(
-                "Delete",
-                () => openDeleteModal(meal.id)
+                    tagContainer.appendChild(
+                        createTagElement(
+                            tag
+                        )
+                    );
+                }
             );
 
 
-        mealItem.append(
-            title,
-            tagContainer,
-            ingredientsButton,
-            editButton,
-            deleteButton
-        );
+            const ingredientsButton =
+                createButton(
+                    "View Ingredients",
+                    () =>
+                        openIngredientsModal(
+                            meal
+                        )
+                );
 
 
-        mealList.appendChild(mealItem);
-    });
+            const editButton =
+                createButton(
+                    "Edit",
+                    () =>
+                        openEditModal(
+                            meal.id
+                        )
+                );
+
+
+            const deleteButton =
+                createButton(
+                    "Delete",
+                    () =>
+                        openDeleteModal(
+                            meal.id
+                        )
+                );
+
+
+            mealItem.append(
+                title,
+                tagContainer,
+                ingredientsButton,
+                editButton,
+                deleteButton
+            );
+
+
+            /*
+             * Recipe / video link
+             */
+
+            if (
+                meal.videoLink
+            ) {
+
+                const linkButton =
+                    document.createElement(
+                        "button"
+                    );
+
+                linkButton.type =
+                    "button";
+
+                linkButton.textContent =
+                    "Open Recipe / Video";
+
+
+                linkButton.addEventListener(
+                    "click",
+                    () => {
+
+                        window.open(
+                            meal.videoLink,
+                            "_blank",
+                            "noopener,noreferrer"
+                        );
+                    }
+                );
+
+
+                mealItem.appendChild(
+                    linkButton
+                );
+            }
+
+
+            mealList.appendChild(
+                mealItem
+            );
+        }
+    );
 }
 
 
-function createButton(text, action) {
-    const button =
-        document.createElement("button");
+/* =========================================================
+   GENERIC BUTTON
+========================================================= */
 
-    button.type = "button";
-    button.textContent = text;
+function createButton(
+    text,
+    action
+) {
+
+    const button =
+        document.createElement(
+            "button"
+        );
+
+
+    button.type =
+        "button";
+
+    button.textContent =
+        text;
+
 
     button.addEventListener(
         "click",
         action
     );
 
+
     return button;
 }
 
 
-/* =========================
+/* =========================================================
    EDIT MEAL
-========================= */
+========================================================= */
 
-function openEditModal(mealId) {
+function openEditModal(
+    mealId
+) {
+
     const meal =
         getMeals().find(
-            (meal) => meal.id === mealId
+            meal =>
+                meal.id === mealId
         );
 
 
@@ -406,26 +1095,48 @@ function openEditModal(mealId) {
     }
 
 
-    editingMealId = mealId;
+    editingMealId =
+        mealId;
 
-    editMealName.value = meal.name;
+
+    editMealName.value =
+        meal.name;
 
 
-    /* Restore selected tags */
+    /*
+     * Restore tags
+     */
+
     document
-        .querySelectorAll(".editMealTag")
-        .forEach((checkbox) => {
-            checkbox.checked =
-                (meal.tags || [])
-                    .includes(checkbox.value);
-        });
+        .querySelectorAll(
+            ".editMealTag"
+        )
+        .forEach(
+            checkbox => {
+
+                checkbox.checked =
+                    (
+                        meal.tags || []
+                    ).includes(
+                        checkbox.value
+                    );
+            }
+        );
 
 
-    /* Restore ingredients */
-    editMealIngredients.innerHTML = "";
+    /*
+     * Restore ingredients
+     */
 
-    (meal.ingredients || []).forEach(
-        (ingredient) => {
+    editMealIngredients.innerHTML =
+        "";
+
+
+    (
+        meal.ingredients || []
+    ).forEach(
+        ingredient => {
+
             addIngredientRow(
                 editMealIngredients,
                 ingredient
@@ -434,17 +1145,39 @@ function openEditModal(mealId) {
     );
 
 
-    /* Reset edit tags to open */
-    if (editTagsSection) {
-        editTagsSection.classList.remove("collapsed");
+    /*
+     * Restore recipe/video link
+     */
+
+    if (editMealVideoLink) {
+
+        editMealVideoLink.value =
+            meal.videoLink || "";
     }
+
+
+    /*
+     * Open tags
+     */
+
+    if (editMealTags) {
+
+        editMealTags.classList.remove(
+            "collapsed"
+        );
+    }
+
 
     if (editTagArrow) {
-        editTagArrow.textContent = "▼";
+
+        editTagArrow.textContent =
+            "▼";
     }
 
 
-    editMealModal.style.display = "flex";
+    editMealModal.style.display =
+        "flex";
+
 
     editMealName.focus();
 }
@@ -453,7 +1186,10 @@ function openEditModal(mealId) {
 addEditIngredientButton?.addEventListener(
     "click",
     () => {
-        addIngredientRow(editMealIngredients);
+
+        addIngredientRow(
+            editMealIngredients
+        );
     }
 );
 
@@ -461,22 +1197,33 @@ addEditIngredientButton?.addEventListener(
 cancelEditButton?.addEventListener(
     "click",
     () => {
+
         closeEditModal();
     }
 );
 
 
 function closeEditModal() {
-    editMealModal.style.display = "none";
 
-    editingMealId = null;
+    editMealModal.style.display =
+        "none";
+
+    editingMealId =
+        null;
 }
 
+
+/* =========================================================
+   SAVE EDITED MEAL
+========================================================= */
 
 saveEditButton?.addEventListener(
     "click",
     () => {
-        if (!editingMealId) {
+
+        if (
+            !editingMealId
+        ) {
             return;
         }
 
@@ -486,18 +1233,24 @@ saveEditButton?.addEventListener(
 
 
         if (!newName) {
-            alert("Please enter a meal name.");
+
+            alert(
+                "Please enter a meal name."
+            );
+
             return;
         }
 
 
-        const meals = getMeals();
+        const meals =
+            getMeals();
 
 
         const meal =
             meals.find(
-                (meal) =>
-                    meal.id === editingMealId
+                meal =>
+                    meal.id ===
+                    editingMealId
             );
 
 
@@ -506,15 +1259,31 @@ saveEditButton?.addEventListener(
         }
 
 
-        meal.name = newName;
+        meal.name =
+            newName;
 
-        meal.tags = getEditTags();
+
+        meal.tags =
+            getEditTags();
+
 
         meal.ingredients =
-            getIngredients(editMealIngredients);
+            getIngredients(
+                editMealIngredients
+            );
 
 
-        saveMeals(meals);
+        if (editMealVideoLink) {
+
+            meal.videoLink =
+                editMealVideoLink.value.trim();
+        }
+
+
+        saveMeals(
+            meals
+        );
+
 
         displayMeals();
 
@@ -523,14 +1292,18 @@ saveEditButton?.addEventListener(
 );
 
 
-/* =========================
+/* =========================================================
    DELETE MEAL
-========================= */
+========================================================= */
 
-function openDeleteModal(mealId) {
+function openDeleteModal(
+    mealId
+) {
+
     const meal =
         getMeals().find(
-            (meal) => meal.id === mealId
+            meal =>
+                meal.id === mealId
         );
 
 
@@ -539,51 +1312,65 @@ function openDeleteModal(mealId) {
     }
 
 
-    deletingMealId = mealId;
+    deletingMealId =
+        mealId;
 
 
     deleteMealMessage.textContent =
         `Are you sure you want to delete "${meal.name}"?`;
 
 
-    deleteMealModal.style.display = "flex";
+    deleteMealModal.style.display =
+        "flex";
 }
 
 
 cancelDeleteButton?.addEventListener(
     "click",
     () => {
+
         closeDeleteModal();
     }
 );
 
 
 function closeDeleteModal() {
-    deleteMealModal.style.display = "none";
 
-    deletingMealId = null;
+    deleteMealModal.style.display =
+        "none";
+
+    deletingMealId =
+        null;
 }
 
 
 confirmDeleteButton?.addEventListener(
     "click",
     () => {
-        if (!deletingMealId) {
+
+        if (
+            !deletingMealId
+        ) {
             return;
         }
 
 
-        const meals = getMeals();
+        const meals =
+            getMeals();
 
 
         const updatedMeals =
             meals.filter(
-                (meal) =>
-                    meal.id !== deletingMealId
+                meal =>
+                    meal.id !==
+                    deletingMealId
             );
 
 
-        saveMeals(updatedMeals);
+        saveMeals(
+            updatedMeals
+        );
+
 
         displayMeals();
 
@@ -592,35 +1379,51 @@ confirmDeleteButton?.addEventListener(
 );
 
 
-/* =========================
+/* =========================================================
    INGREDIENTS MODAL
-========================= */
+========================================================= */
 
-function openIngredientsModal(meal) {
+function openIngredientsModal(
+    meal
+) {
+
     ingredientsModalTitle.textContent =
         meal.name;
 
-    ingredientsList.innerHTML = "";
+
+    ingredientsList.innerHTML =
+        "";
 
 
     const ingredients =
         meal.ingredients || [];
 
 
-    if (ingredients.length === 0) {
+    if (
+        ingredients.length === 0
+    ) {
+
         const message =
-            document.createElement("p");
+            document.createElement(
+                "p"
+            );
 
         message.textContent =
             "No ingredients have been added.";
 
-        ingredientsList.appendChild(message);
+        ingredientsList.appendChild(
+            message
+        );
 
     } else {
+
         ingredients.forEach(
-            (ingredient) => {
+            ingredient => {
+
                 const item =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 item.className =
                     "ingredientDisplay";
@@ -638,32 +1441,48 @@ function openIngredientsModal(meal) {
                         : "";
 
 
+                const displayName =
+                    getIngredientDisplayName(
+                        ingredient.name
+                    );
+
+
                 item.textContent =
-                    `${amount}${unit}${ingredient.name}`;
+                    `${amount}${unit}${displayName}`;
 
 
-                ingredientsList.appendChild(item);
+                ingredientsList.appendChild(
+                    item
+                );
             }
         );
     }
 
 
-    ingredientsModal.style.display = "flex";
+    ingredientsModal.style.display =
+        "flex";
 }
 
 
 closeIngredientsButton?.addEventListener(
     "click",
     () => {
-        ingredientsModal.style.display = "none";
+
+        ingredientsModal.style.display =
+            "none";
     }
 );
 
 
 ingredientsModal?.addEventListener(
     "click",
-    (event) => {
-        if (event.target === ingredientsModal) {
+    event => {
+
+        if (
+            event.target ===
+            ingredientsModal
+        ) {
+
             ingredientsModal.style.display =
                 "none";
         }
@@ -671,14 +1490,19 @@ ingredientsModal?.addEventListener(
 );
 
 
-/* =========================
+/* =========================================================
    MODAL BACKDROP CLOSING
-========================= */
+========================================================= */
 
 editMealModal?.addEventListener(
     "click",
-    (event) => {
-        if (event.target === editMealModal) {
+    event => {
+
+        if (
+            event.target ===
+            editMealModal
+        ) {
+
             closeEditModal();
         }
     }
@@ -687,17 +1511,66 @@ editMealModal?.addEventListener(
 
 deleteMealModal?.addEventListener(
     "click",
-    (event) => {
-        if (event.target === deleteMealModal) {
+    event => {
+
+        if (
+            event.target ===
+            deleteMealModal
+        ) {
+
             closeDeleteModal();
         }
     }
 );
 
 
-/* =========================
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key !== "Escape"
+        ) {
+            return;
+        }
+
+
+        if (
+            editMealModal?.style.display ===
+            "flex"
+        ) {
+
+            closeEditModal();
+        }
+
+
+        if (
+            deleteMealModal?.style.display ===
+            "flex"
+        ) {
+
+            closeDeleteModal();
+        }
+
+
+        if (
+            ingredientsModal?.style.display ===
+            "flex"
+        ) {
+
+            ingredientsModal.style.display =
+                "none";
+        }
+    }
+);
+
+
+/* =========================================================
    INITIALISE
-========================= */
+========================================================= */
 
 displayMeals();
-

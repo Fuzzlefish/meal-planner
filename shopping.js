@@ -537,11 +537,9 @@ INGREDIENT NORMALISATION
 
 function normaliseIngredientName(name) {
 
-    return name
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, " ");
-
+    return getCanonicalIngredientName(
+        name
+    );
 }
 
 
@@ -763,7 +761,9 @@ function buildMealIngredients() {
 
 
                     const name =
-                        ingredient.name.trim();
+                        getIngredientDisplayName(
+                            ingredient.name
+                        );
 
 
                     const key =
