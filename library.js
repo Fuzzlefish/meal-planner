@@ -577,8 +577,9 @@ function setupIngredientSuggestions(
                                     );
 
 
+                                /* pointerdown fires before the input blur on touch devices. */
                                 button.addEventListener(
-                                    "click",
+                                    "pointerdown",
                                     () => {
 
                                         const displayName =

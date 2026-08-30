@@ -1160,7 +1160,7 @@ body[data-theme="red"] {
 
   .ingredientRow {
     display: grid;
-    grid-template-columns: 1fr 75px 42px;
+    grid-template-columns: minmax(0, 1fr) 75px 42px;
     grid-template-areas:
       "name name remove"
       "amount unit remove";
@@ -1181,8 +1181,9 @@ body[data-theme="red"] {
     border-radius: 9px;
   }
 
-  .ingredientRow input[type="text"] {
+  .ingredientRow .ingredientNameWrapper {
     grid-area: name;
+    min-width: 0;
   }
 
   .ingredientRow input[type="number"] {
@@ -1902,10 +1903,13 @@ MOBILE MEAL LINKS
 @media (max-width: 600px) {
 
     .ingredientSuggestions {
-        position: fixed;
-        left: 12px;
-        right: 12px;
+        /* Keep the menu directly below the active ingredient input. */
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
         width: auto;
+        z-index: 20;
     }
 
     .normalisationCardHeader {
