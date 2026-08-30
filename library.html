@@ -19,6 +19,18 @@
 
     </div>
 
+    <button id="themeButton" aria-label="Change theme">🎨</button>
+
+    <div id="themeOptions">
+        <button data-theme="coffee">☕ Coffee</button>
+        <button data-theme="sage">🌿 Sage</button>
+        <button data-theme="ocean">🌊 Ocean</button>
+        <button data-theme="berry">🍓 Berry</button>
+        <button data-theme="night">🌙 Night Cafe</button>
+        <button data-theme="red">🍷 Felicity</button>
+    </div>
+
+
     <button id="addMealButton">Add Meal</button>
 
     <div id="addMealForm" style="display: none;">
@@ -33,6 +45,16 @@
             </button>
 
             <div id="mealTags" class="tagOptions collapsed">
+                <label>
+                    <input type="checkbox" class="mealTag" value="Lunch">
+                    <span>Lunch</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" class="mealTag" value="Dinner">
+                    <span>Dinner</span>
+                </label>
+
                 <label>
                     <input type="checkbox" class="mealTag" value="Vegetarian">
                     <span>Vegetarian</span>
@@ -97,6 +119,11 @@
                     <input type="checkbox" class="mealTag" value="Leftovers">
                     <span>Leftovers</span>
                 </label>
+
+                <label>
+                    <input type="checkbox" class="mealTag" value="Crockpot">
+                    <span>Crockpot</span>
+                </label>
             </div>
         </div>
 
@@ -108,6 +135,16 @@
             <button type="button" id="addIngredientButton">
                 + Add Ingredient
             </button>
+        </div>
+
+        <div class= "mealLinksSection">
+            <h3>Links</h3>
+
+            <input
+                type="url"
+                id="newMealVideoLink"
+                placeholder="Insta Link (optional)"
+            >
         </div>
 
         <div class="modalButtons">
@@ -136,6 +173,17 @@
                 </button>
 
                 <div id="editMealTags" class="tagOptions collapsed">
+
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Lunch">
+                        <span>Lunch</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Dinner">
+                        <span>Dinner</span>
+                    </label>
+
                     <label>
                         <input type="checkbox" class="editMealTag" value="Vegetarian">
                         <span>Vegetarian</span>
@@ -200,6 +248,11 @@
                         <input type="checkbox" class="editMealTag" value="Leftovers">
                         <span>Leftovers</span>
                     </label>
+
+                    <label>
+                        <input type="checkbox" class="editMealTag" value="Crockpot">
+                        <span>Crockpot</span>
+                    </label>
                 </div>
             </div>
 
@@ -211,6 +264,18 @@
                 <button type="button" id="addEditIngredientButton">
                     + Add Ingredient
                 </button>
+            </div>
+
+            <div class="mealLinksSection">
+
+                <h3>Recipe & Video Links</h3>
+
+                <input
+                    type="url"
+                    id="editMealVideoLink"
+                    placeholder="Insta link (optional)"
+                >
+
             </div>
 
             <div class="modalButtons">

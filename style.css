@@ -616,51 +616,104 @@ THEME OPTIONS
 /* =========================================================
    TAG COLOURS
 ========================================================= */
+.tag-lunch {
+  background: #F7E7D3;
+  color: #5A3E1A;
+}
+
+.tag-dinner {
+  background: #E8D4E9;
+  color: #4F2C55;
+}
 
 .tag-vegetarian {
-  background: #c9dfc5;
-  color: #315437;
+  background: #D2F0C8;
+  color: #2E5A33;
 }
 
 .tag-cheap {
-  background: #f0d99a;
-  color: #6b5318;
+  background: #F8E4A3;
+  color: #5C4A12;
 }
 
 .tag-quick {
-  background: #f3c79b;
-  color: #71431d;
+  background: #FFD3A8;
+  color: #7A3F1C;
 }
 
 .tag-high-protein {
-  background: #e5aaa4;
-  color: #6b2924;
+  background: #F2B7B1;
+  color: #6A2A26;
 }
 
 .tag-healthy {
-  background: #b9dcd3;
-  color: #24584e;
+  background: #C4E7DD;
+  color: #1F5A4D;
 }
 
 .tag-freezer-friendly {
-  background: #b9d5e5;
-  color: #28546b;
+  background: #C7DDF1;
+  color: #1F4F6B;
 }
 
 .tag-spicy {
-  background: #e9aaa0;
-  color: #702b24;
+  background: #F4B2A8;
+  color: #7A2D22;
 }
 
 .tag-family-friendly {
-  background: #d4c1df;
-  color: #533d63;
+  background: #E3D2F1;
+  color: #4A3561;
 }
 
 .tag-one-pot {
-  background: #d7c0a7;
-  color: #59412e;
+  background: #E3CBB1;
+  color: #5A402C;
 }
+
+.tag-leftover {
+  background: #F8E4A3;
+  color: #5C4A12;
+}
+
+.tag-crockpot {
+  background: #405c76;
+  color: #fcfdfd;
+}
+
+.tag-vegan {
+  background: #D2F0C8;
+  color: #2E5A33;
+}
+
+.tag-easy {
+  background: #FFD3A8;
+  color: #7A3F1C;
+}
+
+.tag-leftovers {
+  background: #F8E4A3;
+  color: #5C4A12;
+}
+
+.tag-meal-prep {
+  background: #8AA6C9;
+  color: #0A141A;
+}
+
+.tag-comfort-food {
+  background: #F2B7B1;
+  color: #6A2A26;
+}
+
+.family-favorite {
+  background: #E3D2F1;
+  color: #4A3561;
+}
+
+
+
+
 
 /* =========================================================
    THEMES
@@ -1600,6 +1653,90 @@ body[data-theme="red"] {
 
     .shoppingMealOption {
         min-height: 62px;
+    }
+
+}
+
+/* =========================================================
+MEAL LINKS
+========================================================= */
+
+.mealLinksSection {
+    width: 100%;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.mealLinksSection h3 {
+    margin: 0 0 12px;
+    text-align: center;
+}
+
+.mealLinksSection input {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 14px;
+    margin: 6px 0;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.mealLinksSection input:focus {
+    border-color: var(--button);
+}
+
+
+/* =========================================================
+MEAL LINK BUTTONS
+========================================================= */
+
+.mealLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.mealLinkButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    margin: 0;
+    background: var(--tag);
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+.mealLinkButton:hover {
+    background: var(--button);
+    color: white;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+MOBILE MEAL LINKS
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .mealLinks {
+        flex-direction: column;
+    }
+
+    .mealLinkButton {
+        width: 100%;
+        justify-content: center;
     }
 
 }
