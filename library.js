@@ -16,6 +16,8 @@ const addMealForm =
 const newMealName =
     document.querySelector("#newMealName");
 
+
+
 const cancelMealButton =
     document.querySelector("#cancelMealButton");
 
@@ -88,6 +90,275 @@ const editMealVideoLink =
 let editingMealId = null;
 let deletingMealId = null;
 
+
+/* =========================================================
+   MEAL FILTER
+========================================================= */
+
+const mealFilterWrapper =
+    document.createElement("div");
+
+mealFilterWrapper.className =
+    "mealFilterWrapper";
+
+
+const mealFilterButton =
+    document.createElement("button");
+
+mealFilterButton.type =
+    "button";
+
+mealFilterButton.className =
+    "mealFilterButton";
+
+mealFilterButton.setAttribute(
+    "aria-label",
+    "Filter meals"
+);
+
+mealFilterButton.setAttribute(
+    "aria-expanded",
+    "false"
+);
+
+mealFilterButton.innerHTML = `
+    <span class="mealFilterButtonText">All meals</span>
+    <span class="mealFilterArrow">▼</span>
+`;
+
+
+const mealFilterOptions =
+    document.createElement("div");
+
+mealFilterOptions.className =
+    "mealFilterOptions";
+
+
+/* =========================================================
+   ALL MEALS OPTION
+========================================================= */
+
+const allMealsOption =
+    document.createElement("button");
+
+allMealsOption.type =
+    "button";
+
+allMealsOption.className =
+    "mealFilterOption allMealsFilter";
+
+allMealsOption.dataset.value =
+    "";
+
+allMealsOption.innerHTML = `
+    <span>All meals</span>
+`;
+
+mealFilterOptions.appendChild(
+    allMealsOption
+);
+
+
+/* =========================================================
+   TAG OPTIONS
+========================================================= */
+
+document
+    .querySelectorAll(".mealTag")
+    .forEach(
+        checkbox => {
+
+            const option =
+                document.createElement("button");
+
+            option.type =
+                "button";
+
+            option.className =
+                "mealFilterOption";
+
+            option.dataset.value =
+                checkbox.value;
+
+
+            const tagClass =
+                checkbox.value
+                    .toLowerCase()
+                    .replace(
+                        /\s+/g,
+                        "-"
+                    );
+
+
+            option.innerHTML = `
+                <span class="mealFilterBubble tag-${tagClass}">
+                    ${checkbox.value}
+                </span>
+            `;
+
+
+            option.addEventListener(
+                "click",
+                () => {
+
+                    setMealFilter(
+                        checkbox.value
+                    );
+                }
+            );
+
+
+            mealFilterOptions.appendChild(
+                option
+            );
+        }
+    );
+
+
+/* =========================================================
+   BUILD FILTER
+========================================================= */
+
+mealFilterWrapper.append(
+    mealFilterButton,
+    mealFilterOptions
+);
+
+
+if (mealList?.parentNode) {
+
+    mealList.parentNode.insertBefore(
+        mealFilterWrapper,
+        mealList
+    );
+}
+
+
+/* =========================================================
+   FILTER STATE
+========================================================= */
+
+let currentMealFilter = "";
+
+
+function setMealFilter(value) {
+
+    currentMealFilter =
+        value;
+
+
+    const buttonText =
+        mealFilterButton.querySelector(
+            ".mealFilterButtonText"
+        );
+
+
+    buttonText.textContent =
+        value || "All meals";
+
+
+    /*
+     * Give the closed button the same
+     * colour as the selected tag.
+     */
+
+    mealFilterButton.className =
+        "mealFilterButton";
+
+
+    if (value) {
+
+        const tagClass =
+            value
+                .toLowerCase()
+                .replace(
+                    /\s+/g,
+                    "-"
+                );
+
+        mealFilterButton.classList.add(
+            `tag-${tagClass}`
+        );
+    }
+
+
+    mealFilterOptions
+        .classList.remove("open");
+
+    mealFilterButton
+        .setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+
+    displayMeals();
+}
+
+
+/* =========================================================
+   OPEN / CLOSE
+========================================================= */
+
+mealFilterButton.addEventListener(
+    "click",
+    () => {
+
+        const isOpen =
+            mealFilterOptions.classList.toggle(
+                "open"
+            );
+
+
+        mealFilterButton.setAttribute(
+            "aria-expanded",
+            isOpen
+                ? "true"
+                : "false"
+        );
+    }
+);
+
+
+/* =========================================================
+   ALL MEALS
+========================================================= */
+
+allMealsOption.addEventListener(
+    "click",
+    () => {
+
+        setMealFilter("");
+    }
+);
+
+
+/* =========================================================
+   CLOSE WHEN CLICKING OUTSIDE
+========================================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if (
+            !mealFilterWrapper.contains(
+                event.target
+            )
+        ) {
+
+            mealFilterOptions
+                .classList.remove("open");
+
+            mealFilterButton
+                .setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+        }
+    }
+);
+``
 
 /* =========================================================
    NORMALISATION MANAGER BUTTON

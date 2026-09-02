@@ -662,7 +662,7 @@ THEME OPTIONS
 }
 
 .tag-family-friendly {
-  background: #E3D2F1;
+  background: #7f6693;
   color: #4A3561;
 }
 
@@ -706,9 +706,9 @@ THEME OPTIONS
   color: #6A2A26;
 }
 
-.family-favorite {
-  background: #E3D2F1;
-  color: #4A3561;
+.tag-family-favourite {
+  background: #DCCBEA;
+  color: #49365C;
 }
 
 
@@ -1953,3 +1953,276 @@ MOBILE MEAL LINKS
     }
 
 }
+
+
+/* =========================================================
+   MEAL FILTER
+========================================================= */
+
+.mealFilterWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    margin: 20px auto 25px;
+    z-index: 20;
+}
+
+
+/* =========================================================
+   MAIN FILTER BUTTON
+========================================================= */
+
+.mealFilterButton {
+    width: 100%;
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    padding: 10px 42px 10px 15px;
+
+    border: 2px solid var(--border) !important;
+    border-radius: 12px;
+
+    background: var(--card) !important;
+    color: var(--text) !important;
+
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.mealFilterButton:hover {
+    border-color: var(--button) !important;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Keep the text genuinely centred */
+.mealFilterButtonText {
+    display: block;
+    text-align: center;
+}
+
+
+/* Keep arrow fixed on the right */
+.mealFilterArrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    font-size: 0.7rem;
+
+    transition:
+        transform 0.2s ease;
+}
+
+.mealFilterButton[aria-expanded="true"]
+.mealFilterArrow {
+    transform:
+        translateY(-50%)
+        rotate(180deg);
+}
+
+
+/* =========================================================
+   DROPDOWN PANEL
+========================================================= */
+
+.mealFilterOptions {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    /* THIS CENTRES THE BUBBLES */
+    justify-content: center;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 14px;
+
+    background: var(--card);
+
+    border: 2px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.15);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+        translateY(-6px)
+        scale(0.98);
+
+    transform-origin: top center;
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0.15s ease;
+}
+
+.mealFilterOptions.open {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* =========================================================
+   FILTER OPTION BUTTON
+========================================================= */
+
+.mealFilterOption {
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 0 !important;
+    outline: none !important;
+
+    padding: 0 !important;
+    margin: 0;
+
+    background: transparent !important;
+
+    box-shadow: none !important;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   COLOURED BUBBLES
+========================================================= */
+
+.mealFilterBubble {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 34px;
+
+    padding: 7px 13px;
+
+    border: 0 !important;
+    outline: none !important;
+
+    border-radius: 999px;
+
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    box-shadow: none;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        filter 0.15s ease;
+}
+
+
+/* Hover */
+.mealFilterOption:hover .mealFilterBubble {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.12);
+
+    filter: brightness(0.97);
+}
+
+
+/* Click */
+.mealFilterOption:active .mealFilterBubble {
+    transform: scale(0.95);
+}
+
+
+/* =========================================================
+   ALL MEALS
+========================================================= */
+
+.allMealsFilter {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px 0 12px !important;
+
+    margin-bottom: 2px;
+
+    border: 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+
+    background: transparent !important;
+
+    color: var(--text) !important;
+
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    text-align: center;
+}
+
+.allMealsFilter:hover {
+    color: var(--button) !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .mealFilterWrapper {
+        max-width: 100%;
+    }
+
+    .mealFilterOptions {
+        max-height: 320px;
+        overflow-y: auto;
+
+        padding: 12px 10px;
+    }
+
+    .mealFilterBubble {
+        font-size: 0.85rem;
+        padding: 7px 11px;
+    }
+}
+``
+
