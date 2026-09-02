@@ -749,149 +749,138 @@ function addIngredientRow(
 }
 
 
-/* =========================================================
-   INGREDIENT SUGGESTIONS
-========================================================= */
-
 function setupIngredientSuggestions(
     input,
     suggestionBox
 ) {
 
-    let timeout =
-        null;
+    let timeout = null;
+
+
+    function hideSuggestions() {
+
+        suggestionBox.innerHTML = "";
+        suggestionBox.style.display = "none";
+    }
+
+
+    function showSuggestions() {
+
+        suggestionBox.style.display = "block";
+    }
+
+
+    /* Start hidden */
+    hideSuggestions();
 
 
     input.addEventListener(
         "input",
         () => {
 
-            clearTimeout(
-                timeout
-            );
+            clearTimeout(timeout);
+
+            hideSuggestions();
 
 
-            timeout =
-                setTimeout(
-                    () => {
+            timeout = setTimeout(
+                () => {
 
-                        const value =
-                            input.value.trim();
-
-
-                        if (
-                            value.length < 2
-                        ) {
-
-                            suggestionBox.innerHTML =
-                                "";
-
-                            return;
-                        }
+                    const value =
+                        input.value.trim();
 
 
-                        const suggestions =
-                            findIngredientSuggestions(
-                                value
-                            );
+                    if (value.length < 2) {
+                        return;
+                    }
 
 
-                        suggestionBox.innerHTML =
-                            "";
+                    const suggestions =
+                        findIngredientSuggestions(value);
 
 
-                        if (
-                            suggestions.length === 0
-                        ) {
-
-                            return;
-                        }
+                    if (suggestions.length === 0) {
+                        return;
+                    }
 
 
-                        const title =
-                            document.createElement(
-                                "div"
-                            );
-
-                        title.className =
-                            "ingredientSuggestionTitle";
-
-                        title.textContent =
-                            "Did you mean?";
+                    suggestionBox.innerHTML = "";
 
 
-                        suggestionBox.appendChild(
-                            title
-                        );
+                    const title =
+                        document.createElement("div");
+
+                    title.className =
+                        "ingredientSuggestionTitle";
+
+                    title.textContent =
+                        "Did you mean?";
 
 
-                        suggestions.forEach(
-                            suggestion => {
-
-                                const button =
-                                    document.createElement(
-                                        "button"
-                                    );
+                    suggestionBox.appendChild(title);
 
 
-                                button.type =
-                                    "button";
+                    suggestions.forEach(
+                        suggestion => {
+
+                            const button =
+                                document.createElement("button");
 
 
-                                button.className =
-                                    "ingredientSuggestion";
+                            button.type = "button";
+
+                            button.className =
+                                "ingredientSuggestion";
+
+                            button.textContent =
+                                getIngredientDisplayName(
+                                    suggestion
+                                );
 
 
-                                button.textContent =
-                                    getIngredientDisplayName(
-                                        suggestion
-                                    );
+                            button.addEventListener(
+                                "pointerdown",
+                                event => {
+
+                                    event.preventDefault();
 
 
-                                /* pointerdown fires before the input blur on touch devices. */
-                                button.addEventListener(
-                                    "pointerdown",
-                                    () => {
-
-                                        const displayName =
-                                            getIngredientDisplayName(
-                                                suggestion
-                                            );
-
-
-                                        input.value =
-                                            displayName;
-
-
-                                        suggestionBox.innerHTML =
-                                            "";
-
-
-                                        input.dispatchEvent(
-                                            new Event(
-                                                "change"
-                                            )
+                                    input.value =
+                                        getIngredientDisplayName(
+                                            suggestion
                                         );
-                                    }
-                                );
 
 
-                                suggestionBox.appendChild(
-                                    button
-                                );
-                            }
-                        );
+                                    hideSuggestions();
 
-                    },
-                    200
-                );
+
+                                    input.dispatchEvent(
+                                        new Event(
+                                            "change",
+                                            {
+                                                bubbles: true
+                                            }
+                                        )
+                                    );
+                                }
+                            );
+
+
+                            suggestionBox.appendChild(button);
+                        }
+                    );
+
+
+                    showSuggestions();
+
+                },
+                200
+            );
         }
     );
 
 
-    /* =====================================================
-       CLEAR SUGGESTIONS WHEN FOCUS LEAVES
-    ===================================================== */
+    /* Clear suggestions when focus leaves */
 
     input.addEventListener(
         "blur",
@@ -899,17 +888,13 @@ function setupIngredientSuggestions(
 
             setTimeout(
                 () => {
-
-                    suggestionBox.innerHTML =
-                        "";
-
+                    hideSuggestions();
                 },
                 200
             );
         }
     );
 }
-
 
 /* =========================================================
    GET INGREDIENTS
