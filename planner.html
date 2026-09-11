@@ -236,6 +236,17 @@
 
         <p id="mealModalTitle"></p>
 
+        <div class="mealSearchControls">
+            <div class="ingredientNameWrapper mealIngredientSearchWrapper">
+                <input id="plannerIngredientSearch" type="search" placeholder="Search by ingredient" autocomplete="off">
+                <div id="plannerIngredientSuggestions" class="ingredientSuggestions"></div>
+            </div>
+            <div id="plannerMealViewControls" class="mealViewControls" aria-label="Available meal view">
+                <button type="button" data-view="list" aria-pressed="true">List</button>
+                <button type="button" data-view="grid" aria-pressed="false">Grid</button>
+            </div>
+        </div>
+
         <div id="mealFilters">
             <button class="filterButton" data-category="all">
                 All
@@ -441,5 +452,6 @@
 
 
 
+<script src="Ingredient-normalizer.js"></script>
 <script src="planner.js"></script>
 <script src="theme.js"></script>

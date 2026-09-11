@@ -5,6 +5,9 @@ const mealModalTitle = document.querySelector("#mealModalTitle");
 const availableMeals = document.querySelector("#availableMeals");
 const cancelMealButton = document.querySelector("#cancelMealButton");
 const mealFilters = document.querySelector("#mealFilters");
+const plannerIngredientSearch = document.querySelector("#plannerIngredientSearch");
+const plannerIngredientSuggestions = document.querySelector("#plannerIngredientSuggestions");
+const plannerMealViewControls = document.querySelector("#plannerMealViewControls");
 
 const ingredientsModal = document.querySelector("#ingredientsModal");
 const ingredientsModalTitle =
@@ -69,6 +72,8 @@ const confirmRenamePresetButton =
 let selectedDay = null;
 let selectedMealType = null;
 let selectedCategory = "all";
+let selectedIngredientSearch = "";
+let availableMealView = "list";
 
 let renamingPresetId = null;
 
@@ -164,6 +169,12 @@ if (mealPlan) {
             return;
         }
 
+        const requestedMealType = meal.querySelector("h3")?.textContent.toLowerCase();
+        if (getMealPlan()[day.id]?.[requestedMealType]) {
+            updateAddMealAvailability(meal);
+            return;
+        }
+
         selectedDay = day.id;
 
         selectedMealType =
@@ -177,6 +188,8 @@ if (mealPlan) {
         }
 
         selectedCategory = "all";
+        selectedIngredientSearch = "";
+        if (plannerIngredientSearch) plannerIngredientSearch.value = "";
 
         displayFilters();
         displayMeals();
@@ -246,6 +259,7 @@ function displayMeals() {
     }
 
     availableMeals.innerHTML = "";
+    availableMeals.classList.toggle("mealGrid", availableMealView === "grid");
 
     const meals = getMeals();
 
@@ -262,7 +276,20 @@ function displayMeals() {
         return;
     }
 
-    meals.forEach((meal) => {
+    const filteredMeals = meals.filter(meal => {
+        const tags = meal.tags || [];
+        return (selectedCategory === "all" || tags.includes(selectedCategory)) &&
+            mealMatchesIngredient(meal, selectedIngredientSearch);
+    });
+
+    if (filteredMeals.length === 0) {
+        const message = document.createElement("p");
+        message.textContent = "No meals match your filters.";
+        availableMeals.appendChild(message);
+        return;
+    }
+
+    filteredMeals.forEach((meal) => {
 
         const tags = meal.tags || [];
 
@@ -276,13 +303,11 @@ function displayMeals() {
         const button =
             document.createElement("button");
 
-        button.classList.add(
-            "availableMealButton"
-        );
+        button.classList.add(availableMealView === "grid" ? "mealGridItem" : "availableMealButton");
 
         button.textContent = meal.name;
 
-        if (tags.length > 0) {
+        if (availableMealView === "list" && tags.length > 0) {
 
             const tagContainer =
                 document.createElement("div");
@@ -393,6 +418,10 @@ function selectMeal(meal) {
     const mealType =
         selectedMealType.toLowerCase();
 
+    if (plan[selectedDay][mealType]) {
+        return;
+    }
+
     plan[selectedDay][mealType] =
         meal.id;
 
@@ -406,6 +435,7 @@ function selectMeal(meal) {
         selectedMealSection,
         meal
     );
+    updateAddMealAvailability(selectedMealSection);
 
 
     if (mealModal) {
@@ -538,10 +568,10 @@ function loadMealPlan() {
 
             if (!meal) {
 
-                displayDeletedMeal(
-                    section,
-                    "Deleted meal"
-                );
+            displayDeletedMeal(
+                section,
+                "Deleted meal"
+            );
 
                 return;
             }
@@ -554,6 +584,8 @@ function loadMealPlan() {
         });
 
     });
+
+    updateAllAddMealAvailability();
 
 }
 
@@ -616,7 +648,6 @@ function displaySavedMeal(section, meal) {
             leftoversCheckbox.checked
         );
     });
-
 
     const ingredientsButton =
         document.createElement("button");
@@ -683,6 +714,7 @@ function displaySavedMeal(section, meal) {
             const leftovers = getMealPlanLeftovers();
             delete leftovers[getMealPlanSlotKey(dayName, mealType)];
             saveMealPlanLeftovers(leftovers);
+            updateAddMealAvailability(section);
 
         }
     );
@@ -707,6 +739,7 @@ function displaySavedMeal(section, meal) {
     );
 
     mealList.appendChild(listItem);
+    updateAddMealAvailability(section);
 
 }
 
@@ -794,11 +827,14 @@ function displayDeletedMeal(
 
             saveMealPlan(plan);
 
+            const dayName = day.id;
+            const mealType = heading.textContent.toLowerCase();
             const leftovers = getMealPlanLeftovers();
             delete leftovers[getMealPlanSlotKey(dayName, mealType)];
             saveMealPlanLeftovers(leftovers);
 
             mealList.innerHTML = "";
+            updateAddMealAvailability(section);
 
         }
     );
@@ -818,6 +854,80 @@ function displayDeletedMeal(
     mealList.appendChild(listItem);
 
 }
+
+function updateAddMealAvailability(section) {
+    const dayName = section.closest(".day")?.id;
+    const mealType = section.querySelector("h3")?.textContent.toLowerCase();
+    const addButton = section.querySelector(".addMealButton");
+    if (!dayName || !mealType || !addButton) return;
+    addButton.hidden = Boolean(getMealPlan()[dayName]?.[mealType]);
+}
+
+function updateAllAddMealAvailability() {
+    document.querySelectorAll(".meal").forEach(updateAddMealAvailability);
+}
+
+function normaliseIngredientForSearch(value) {
+    return typeof getCanonicalIngredientName === "function"
+        ? getCanonicalIngredientName(value)
+        : String(value || "").trim().toLowerCase();
+}
+
+function mealMatchesIngredient(meal, query) {
+    const search = normaliseIngredientForSearch(query);
+    if (!search) return true;
+    return (meal.ingredients || []).some(ingredient => {
+        const name = normaliseIngredientForSearch(ingredient.name);
+        return name.includes(search) || search.includes(name);
+    });
+}
+
+function setupPlannerIngredientSearch() {
+    if (!plannerIngredientSearch || !plannerIngredientSuggestions) return;
+    let timeout;
+    const hide = () => {
+        plannerIngredientSuggestions.innerHTML = "";
+        plannerIngredientSuggestions.style.display = "none";
+    };
+    plannerIngredientSearch.addEventListener("input", () => {
+        clearTimeout(timeout);
+        selectedIngredientSearch = plannerIngredientSearch.value.trim();
+        displayMeals();
+        hide();
+        timeout = setTimeout(() => {
+            const suggestions = findIngredientSuggestions(plannerIngredientSearch.value.trim());
+            if (plannerIngredientSearch.value.trim().length < 2 || !suggestions.length) return;
+            suggestions.forEach(suggestion => {
+                const option = document.createElement("button");
+                option.type = "button";
+                option.className = "ingredientSuggestion";
+                option.textContent = getIngredientDisplayName(suggestion);
+                option.addEventListener("pointerdown", event => {
+                    event.preventDefault();
+                    plannerIngredientSearch.value = getIngredientDisplayName(suggestion);
+                    selectedIngredientSearch = plannerIngredientSearch.value;
+                    hide();
+                    displayMeals();
+                });
+                plannerIngredientSuggestions.appendChild(option);
+            });
+            plannerIngredientSuggestions.style.display = "block";
+        }, 200);
+    });
+    plannerIngredientSearch.addEventListener("blur", () => setTimeout(hide, 200));
+}
+
+plannerMealViewControls?.addEventListener("click", event => {
+    const button = event.target.closest("button[data-view]");
+    if (!button) return;
+    availableMealView = button.dataset.view;
+    plannerMealViewControls.querySelectorAll("button").forEach(control =>
+        control.setAttribute("aria-pressed", String(control === button))
+    );
+    displayMeals();
+});
+
+setupPlannerIngredientSearch();
 
 
 /* =========================================================

@@ -477,6 +477,57 @@ label {
   margin: 18px 0;
 }
 
+.mealSearchControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+  margin: 14px auto;
+}
+
+.mealIngredientSearchWrapper {
+  flex: 1;
+}
+
+.ingredientMealSearch,
+#plannerIngredientSearch {
+  width: 100%;
+}
+
+.mealViewControls {
+  display: flex;
+  gap: 4px;
+}
+
+.mealViewControls button[aria-pressed="true"] {
+  background: var(--button-hover);
+}
+
+.mealGrid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 10px;
+}
+
+.mealGridItem {
+  width: 100%;
+  min-height: 54px;
+  margin: 0;
+  padding: 10px;
+  background: var(--meal);
+  color: var(--text);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .mealSearchControls { align-items: stretch; flex-direction: column; }
+  .mealViewControls { justify-content: center; }
+}
+
 .availableMealButton {
   width: 100%;
   padding: 15px;

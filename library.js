@@ -239,6 +239,107 @@ if (mealList?.parentNode) {
 ========================================================= */
 
 let currentMealFilter = "";
+let currentIngredientSearch = "";
+let mealLibraryView = "list";
+
+const librarySearchControls = document.createElement("div");
+librarySearchControls.className = "mealSearchControls";
+librarySearchControls.innerHTML = `
+    <div class="ingredientNameWrapper mealIngredientSearchWrapper">
+        <input type="search" class="ingredientMealSearch" placeholder="Search by ingredient" autocomplete="off">
+        <div class="ingredientSuggestions"></div>
+    </div>
+    <div class="mealViewControls" aria-label="Meal Library view">
+        <button type="button" data-view="list" aria-pressed="true">List</button>
+        <button type="button" data-view="grid" aria-pressed="false">Grid</button>
+    </div>
+`;
+
+mealFilterWrapper.insertAdjacentElement("afterend", librarySearchControls);
+
+const libraryIngredientSearch = librarySearchControls.querySelector("input");
+const librarySuggestionBox = librarySearchControls.querySelector(".ingredientSuggestions");
+
+function normaliseIngredientForSearch(value) {
+    return typeof getCanonicalIngredientName === "function"
+        ? getCanonicalIngredientName(value)
+        : String(value || "").trim().toLowerCase();
+}
+
+function mealMatchesIngredient(meal, query) {
+    const search = normaliseIngredientForSearch(query);
+
+    if (!search) {
+        return true;
+    }
+
+    return (meal.ingredients || []).some(ingredient => {
+        const ingredientName = normaliseIngredientForSearch(ingredient.name);
+        return ingredientName.includes(search) || search.includes(ingredientName);
+    });
+}
+
+function setupMealIngredientSearch(input, suggestionBox, onSearch) {
+    let timeout = null;
+    const hideSuggestions = () => {
+        suggestionBox.innerHTML = "";
+        suggestionBox.style.display = "none";
+    };
+
+    input.addEventListener("input", () => {
+        clearTimeout(timeout);
+        onSearch(input.value);
+        hideSuggestions();
+
+        timeout = setTimeout(() => {
+            const value = input.value.trim();
+            const suggestions = typeof findIngredientSuggestions === "function"
+                ? findIngredientSuggestions(value)
+                : [];
+
+            if (value.length < 2 || suggestions.length === 0) {
+                return;
+            }
+
+            const title = document.createElement("div");
+            title.className = "ingredientSuggestionTitle";
+            title.textContent = "Ingredients";
+            suggestionBox.appendChild(title);
+
+            suggestions.forEach(suggestion => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "ingredientSuggestion";
+                button.textContent = getIngredientDisplayName(suggestion);
+                button.addEventListener("pointerdown", event => {
+                    event.preventDefault();
+                    input.value = getIngredientDisplayName(suggestion);
+                    hideSuggestions();
+                    onSearch(input.value);
+                });
+                suggestionBox.appendChild(button);
+            });
+            suggestionBox.style.display = "block";
+        }, 200);
+    });
+
+    input.addEventListener("blur", () => setTimeout(hideSuggestions, 200));
+}
+
+setupMealIngredientSearch(libraryIngredientSearch, librarySuggestionBox, value => {
+    currentIngredientSearch = value.trim();
+    displayMeals();
+});
+
+librarySearchControls.querySelector(".mealViewControls").addEventListener("click", event => {
+    const button = event.target.closest("button[data-view]");
+    if (!button) return;
+    mealLibraryView = button.dataset.view;
+    librarySearchControls.querySelectorAll("button[data-view]").forEach(control => {
+        control.setAttribute("aria-pressed", String(control === button));
+    });
+    displayMeals();
+});
 
 
 function setMealFilter(value) {
@@ -1150,17 +1251,23 @@ function displayMeals() {
         getMeals();
 
 
-    if (
-        meals.length === 0
-    ) {
+    const filteredMeals = meals.filter(meal =>
+        (!currentMealFilter || (meal.tags || []).includes(currentMealFilter)) &&
+        mealMatchesIngredient(meal, currentIngredientSearch)
+    );
+
+    mealList.classList.toggle("mealGrid", mealLibraryView === "grid");
+
+    if (filteredMeals.length === 0) {
 
         const message =
             document.createElement(
                 "p"
             );
 
-        message.textContent =
-            "You haven't added any meals yet.";
+        message.textContent = meals.length === 0
+            ? "You haven't added any meals yet."
+            : "No meals match your filters.";
 
         mealList.appendChild(
             message
@@ -1170,8 +1277,18 @@ function displayMeals() {
     }
 
 
-    meals.forEach(
+    filteredMeals.forEach(
         meal => {
+
+            if (mealLibraryView === "grid") {
+                const mealButton = document.createElement("button");
+                mealButton.type = "button";
+                mealButton.className = "mealGridItem";
+                mealButton.textContent = meal.name;
+                mealButton.addEventListener("click", () => openEditModal(meal.id));
+                mealList.appendChild(mealButton);
+                return;
+            }
 
             const mealItem =
                 document.createElement(
