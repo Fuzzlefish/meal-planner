@@ -286,6 +286,8 @@ function setupMealIngredientSearch(input, suggestionBox, onSearch) {
         suggestionBox.style.display = "none";
     };
 
+    hideSuggestions();
+
     input.addEventListener("input", () => {
         clearTimeout(timeout);
         onSearch(input.value);
@@ -467,6 +469,10 @@ document.addEventListener(
 
 if (addMealButton) {
 
+    addMealButton.classList.add(
+        "secondaryShoppingButton"
+    );
+
     const normalisationButton =
         document.createElement("button");
 
@@ -489,7 +495,6 @@ if (addMealButton) {
         addMealButton.nextSibling
     );
 }
-
 
 /* =========================================================
    STORAGE

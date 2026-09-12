@@ -492,7 +492,32 @@ label {
 
 .ingredientMealSearch,
 #plannerIngredientSearch {
-  width: 100%;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 15px;
+
+    border: 2px solid var(--border);
+    border-radius: 12px;
+
+    outline: none;
+
+    background: var(--card);
+    color: var(--text);
+
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.ingredientMealSearch:focus,
+#plannerIngredientSearch:focus {
+    border-color: var(--button);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
 .mealViewControls {
@@ -799,19 +824,30 @@ body[data-theme="sage"] {
 }
 
 body[data-theme="ocean"] {
-  --background: #e8f1f3;
-  --card: #f7fbfc;
-  --secondary: #deebef;
-  --text: #263e46;
-  --heading: #365c67;
-  --button: #527f8c;
-  --button-hover: #3d6570;
-  --border: #c2d7dc;
-  --tag: #c5dce1;
-  --meal: #d5e7eb;
-  --modal: rgba(30, 48, 54, 0.65);
-}
 
+  --background: #101c2c;
+
+  --card: #18283b;
+
+  --secondary: #20344a;
+
+  --text: #e4edf5;
+
+  --heading: #a9c9e5;
+
+  --button: #416b91;
+
+  --button-hover: #5686ad;
+
+  --border: #304b65;
+
+  --tag: #304b61;
+
+  --meal: #263d53;
+
+  --modal: rgba(5, 12, 22, 0.78);
+
+}
 body[data-theme="berry"] {
   --background: #f4e8eb;
   --card: #fff8fa;
@@ -1404,6 +1440,8 @@ body[data-theme="red"] {
 
 
 .shoppingMealOption {
+
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1497,16 +1535,7 @@ body[data-theme="red"] {
     background: var(--meal);
 }
 
-.leftoversToggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin: 8px 0 2px;
-    padding: 6px 8px;
-    background: var(--tag);
-    border-radius: 8px;
-    font-size: 0.85rem;
-}
+
 
 .meal li.isLeftovers {
     opacity: 0.8;
@@ -2585,4 +2614,77 @@ padding: 20px 10px;
 min-height: 58px;
 border: 12px 16px;
 }
+}
+.plannerMealItem {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+
+    width: 100%;
+    min-height: 120px;
+
+    margin: 8px 0;
+    padding: 10px 12px 12px;
+
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    list-style: none;
+    box-sizing: border-box;
+}
+
+/* LEFTOVERS - TOP LEFT */
+.plannerMealItem .leftoversToggle {
+    grid-column: 1;
+    grid-row: 1;
+
+    justify-self: start;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    margin: 0 0 12px;
+    padding: 4px 8px;
+
+    background: var(--tag);
+    color: var(--text);
+
+    border: 0;
+    border-radius: 6px;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+/* MEAL TITLE - CENTRED ON ITS OWN ROW */
+.plannerMealItem > strong {
+    grid-column: 1;
+    grid-row: 2;
+
+    justify-self: center;
+
+    margin: 0 0 18px;
+
+    color: var(--heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* BUTTONS */
+.plannerMealItem .mealActions {
+    grid-column: 1;
+    grid-row: 3;
+
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+
+    width: 100%;
 }

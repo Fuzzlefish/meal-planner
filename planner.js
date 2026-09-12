@@ -608,24 +608,51 @@ function displaySavedMeal(section, meal) {
     const listItem =
         document.createElement("li");
 
-    listItem.textContent = meal.name;
+    listItem.classList.add("plannerMealItem");
 
-    const dayName = section.closest(".day")?.id;
-    const mealType = section.querySelector("h3")
-        ?.textContent.toLowerCase();
-    const leftoverKey = getMealPlanSlotKey(dayName, mealType);
-    const leftovers = getMealPlanLeftovers();
+    /* ---------------------------------------------------------
+       MEAL NAME
+    --------------------------------------------------------- */
 
-    const leftoversLabel = document.createElement("label");
-    leftoversLabel.className = "leftoversToggle";
+    const mealName =
+        document.createElement("strong");
 
-    const leftoversCheckbox = document.createElement("input");
+    mealName.textContent = meal.name;
+
+    /* ---------------------------------------------------------
+       LEFTOVERS
+    --------------------------------------------------------- */
+
+    const dayName =
+        section.closest(".day")?.id;
+
+    const mealType =
+        section.querySelector("h3")
+            ?.textContent.toLowerCase();
+
+    const leftoverKey =
+        getMealPlanSlotKey(dayName, mealType);
+
+    const leftovers =
+        getMealPlanLeftovers();
+
+    const leftoversLabel =
+        document.createElement("label");
+
+    leftoversLabel.className =
+        "leftoversToggle";
+
+    const leftoversCheckbox =
+        document.createElement("input");
+
     leftoversCheckbox.type = "checkbox";
-    leftoversCheckbox.checked = leftovers[leftoverKey] === true;
+
+    leftoversCheckbox.checked =
+        leftovers[leftoverKey] === true;
 
     leftoversLabel.append(
         leftoversCheckbox,
-        document.createTextNode(" Leftovers from another meal")
+        document.createTextNode("Leftovers")
     );
 
     listItem.classList.toggle(
@@ -633,21 +660,36 @@ function displaySavedMeal(section, meal) {
         leftoversCheckbox.checked
     );
 
-    leftoversCheckbox.addEventListener("change", () => {
-        const updated = getMealPlanLeftovers();
+    leftoversCheckbox.addEventListener(
+        "change",
+        () => {
 
-        if (leftoversCheckbox.checked) {
-            updated[leftoverKey] = true;
-        } else {
-            delete updated[leftoverKey];
+            const updated =
+                getMealPlanLeftovers();
+
+            if (leftoversCheckbox.checked) {
+
+                updated[leftoverKey] = true;
+
+            } else {
+
+                delete updated[leftoverKey];
+
+            }
+
+            saveMealPlanLeftovers(updated);
+
+            listItem.classList.toggle(
+                "isLeftovers",
+                leftoversCheckbox.checked
+            );
+
         }
+    );
 
-        saveMealPlanLeftovers(updated);
-        listItem.classList.toggle(
-            "isLeftovers",
-            leftoversCheckbox.checked
-        );
-    });
+    /* ---------------------------------------------------------
+       VIEW INGREDIENTS
+    --------------------------------------------------------- */
 
     const ingredientsButton =
         document.createElement("button");
@@ -661,14 +703,24 @@ function displaySavedMeal(section, meal) {
 
     ingredientsButton.addEventListener(
         "click",
-        () => openIngredientsModal(meal)
+        (event) => {
+
+            event.stopPropagation();
+
+            openIngredientsModal(meal);
+
+        }
     );
 
+    /* ---------------------------------------------------------
+       REMOVE
+    --------------------------------------------------------- */
 
     const removeButton =
         document.createElement("button");
 
-    removeButton.textContent = "Remove";
+    removeButton.textContent =
+        "Remove";
 
     removeButton.classList.add(
         "removeMealButton"
@@ -676,7 +728,9 @@ function displaySavedMeal(section, meal) {
 
     removeButton.addEventListener(
         "click",
-        () => {
+        (event) => {
+
+            event.stopPropagation();
 
             const day =
                 section.closest(".day");
@@ -685,7 +739,8 @@ function displaySavedMeal(section, meal) {
                 return;
             }
 
-            const dayName = day.id;
+            const dayName =
+                day.id;
 
             const heading =
                 section.querySelector("h3");
@@ -711,39 +766,60 @@ function displaySavedMeal(section, meal) {
 
             saveMealPlan(plan);
 
-            const leftovers = getMealPlanLeftovers();
-            delete leftovers[getMealPlanSlotKey(dayName, mealType)];
-            saveMealPlanLeftovers(leftovers);
-            updateAddMealAvailability(section);
+            const leftovers =
+                getMealPlanLeftovers();
+
+            delete leftovers[
+                getMealPlanSlotKey(
+                    dayName,
+                    mealType
+                )
+            ];
+
+            saveMealPlanLeftovers(
+                leftovers
+            );
+
+            updateAddMealAvailability(
+                section
+            );
 
         }
     );
 
+    /* ---------------------------------------------------------
+       BUTTONS
+    --------------------------------------------------------- */
 
-    listItem.appendChild(
-        document.createElement("br")
-    );
+    const mealActions =
+        document.createElement("div");
 
-    listItem.appendChild(leftoversLabel);
+    mealActions.className =
+        "mealActions";
 
-    listItem.appendChild(
-        document.createElement("br")
-    );
-
-    listItem.appendChild(
-        ingredientsButton
-    );
-
-    listItem.appendChild(
+    mealActions.append(
+        ingredientsButton,
         removeButton
     );
 
-    mealList.appendChild(listItem);
-    updateAddMealAvailability(section);
+    /* ---------------------------------------------------------
+       BUILD MEAL BOX
+    --------------------------------------------------------- */
 
+    listItem.append(
+        leftoversLabel,
+        mealName,
+        mealActions
+    );
+
+    mealList.appendChild(
+        listItem
+    );
+
+    updateAddMealAvailability(
+        section
+    );
 }
-
-
 /* =========================================================
    DELETED MEAL
 ========================================================= */
@@ -889,6 +965,9 @@ function setupPlannerIngredientSearch() {
         plannerIngredientSuggestions.innerHTML = "";
         plannerIngredientSuggestions.style.display = "none";
     };
+
+    hide();
+
     plannerIngredientSearch.addEventListener("input", () => {
         clearTimeout(timeout);
         selectedIngredientSearch = plannerIngredientSearch.value.trim();
