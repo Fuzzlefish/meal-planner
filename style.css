@@ -2688,3 +2688,121 @@ border: 12px 16px;
 
     width: 100%;
 }
+
+
+/* =========================================================
+COMMONLY USED INGREDIENTS
+========================================================= */
+
+.commonIngredientsSection {
+    width: 100%;
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+
+/* ---------------------------------------------------------
+   DROPDOWN HEADER
+--------------------------------------------------------- */
+
+.commonIngredientsToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    width: 100%;
+
+    padding: 10px 0;
+
+    background: transparent;
+    color: var(--heading);
+
+    border: 0;
+
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+
+.commonIngredientsToggle:hover {
+    color: var(--text);
+}
+
+
+#commonIngredientsArrow {
+    width: 16px;
+
+    font-size: 0.9rem;
+}
+
+
+/* ---------------------------------------------------------
+   INGREDIENT LIST
+--------------------------------------------------------- */
+
+.commonIngredientsList {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    margin-top: 4px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* ---------------------------------------------------------
+   INGREDIENT ROW
+--------------------------------------------------------- */
+
+.commonIngredientRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 8px 4px;
+
+    border-bottom: 1px solid var(--border);
+
+    box-sizing: border-box;
+}
+
+
+.commonIngredientName {
+    color: var(--text);
+
+    font-size: 0.9rem;
+}
+
+
+/* ---------------------------------------------------------
+   PLUS BUTTON
+--------------------------------------------------------- */
+
+.commonIngredientsList {
+    display: none;
+
+    flex-direction: column;
+
+    width: 100%;
+
+    margin-top: 4px;
+
+    border-top: 1px solid var(--border);
+}
+
+.commonIngredientsList.open {
+    display: flex;
+}
+
+.commonIngredientAddButton:hover {
+    background: var(--button-hover);
+}

@@ -54,7 +54,25 @@ const cancelShoppingItemButton =
 const saveShoppingItemButton =
     document.querySelector("#saveShoppingItemButton");
 
+const commonIngredientsSection =
+    document.querySelector(
+        "#commonIngredientsSection"
+    );
 
+const commonIngredientsToggle =
+    document.querySelector(
+        "#commonIngredientsToggle"
+    );
+
+const commonIngredientsArrow =
+    document.querySelector(
+        "#commonIngredientsArrow"
+    );
+
+const commonIngredientsList =
+    document.querySelector(
+        "#commonIngredientsList"
+    );
 /* =========================================================
 DELETE MODAL
 ========================================================= */
@@ -75,7 +93,24 @@ const confirmDeleteShoppingItemButton =
         "#confirmDeleteShoppingItemButton"
     );
 
+/* =========================================================
+COMMONLY USED INGREDIENTS
+========================================================= */
 
+const commonlyUsedShoppingItems = [
+
+    "Milk",
+    "Butter",
+    "Cheese",
+    "Eggs",
+    "Bread",
+    "Onions",
+    "Garlic",
+    "Bananas",
+    "Tinned Tomatoes",
+    "Toilet Paper",
+
+];
 /* =========================================================
 STATE
 ========================================================= */
@@ -1783,6 +1818,18 @@ addShoppingItemButton?.addEventListener(
         editingShoppingItemId =
             null;
 
+        commonIngredientsList.classList.remove(
+            "open"
+        );
+
+        commonIngredientsToggle.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        commonIngredientsArrow.textContent =
+            "▸";
+
 
         shoppingItemModalTitle.textContent =
             "Add Shopping Item";
@@ -2219,8 +2266,200 @@ document.addEventListener(
 
     }
 );
+/* =========================================================
+COMMON INGREDIENTS DROPDOWN
+========================================================= */
+
+function renderCommonIngredients() {
+
+    if (!commonIngredientsList) {
+        return;
+    }
 
 
+    commonIngredientsList.innerHTML = "";
+
+
+    commonlyUsedShoppingItems.forEach(
+        (ingredientName) => {
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "commonIngredientRow";
+
+
+            const name =
+                document.createElement("span");
+
+            name.className =
+                "commonIngredientName";
+
+            name.textContent =
+                ingredientName;
+
+
+            const addButton =
+                document.createElement("button");
+
+            addButton.type =
+                "button";
+
+            addButton.className =
+                "commonIngredientAddButton";
+
+            addButton.textContent =
+                "+";
+
+            addButton.setAttribute(
+                "aria-label",
+                `Add ${ingredientName}`
+            );
+
+
+            addButton.addEventListener(
+                "click",
+                () => {
+
+                    addCommonShoppingIngredient(
+                        ingredientName
+                    );
+
+                }
+            );
+
+
+            row.append(
+                name,
+                addButton
+            );
+
+
+            commonIngredientsList.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+/* =========================================================
+ADD COMMON INGREDIENT
+========================================================= */
+
+function addCommonShoppingIngredient(
+    ingredientName
+) {
+
+    const items =
+        getShoppingItems();
+
+
+    const normalisedName =
+        normaliseIngredientName(
+            ingredientName
+        );
+
+
+    const alreadyExists =
+        items.some(
+            (item) =>
+                normaliseIngredientName(
+                    item.name
+                ) === normalisedName
+        );
+
+
+    if (alreadyExists) {
+
+        /*
+         * The ingredient is already
+         * on the shopping list.
+         */
+
+        return;
+
+    }
+
+
+    items.push({
+
+        id:
+            crypto.randomUUID(),
+
+        name:
+            ingredientName,
+
+        amount:
+            "",
+
+        unit:
+            "",
+
+        status:
+            "needed",
+
+        createdAt:
+            new Date().toISOString()
+
+    });
+
+
+    saveShoppingItems(
+        items
+    );
+
+
+    renderShoppingList();
+
+}
+/* =========================================================
+TOGGLE COMMON INGREDIENTS
+========================================================= */
+
+commonIngredientsToggle?.addEventListener(
+    "click",
+    () => {
+
+        const isOpen =
+            commonIngredientsList.classList.contains(
+                "open"
+            );
+
+
+        if (isOpen) {
+
+            commonIngredientsList.classList.remove(
+                "open"
+            );
+
+            commonIngredientsToggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            commonIngredientsArrow.textContent =
+                "▸";
+
+        } else {
+
+            commonIngredientsList.classList.add(
+                "open"
+            );
+
+            commonIngredientsToggle.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            commonIngredientsArrow.textContent =
+                "▾";
+
+        }
+
+    }
+);
 /* =========================================================
 INITIALISE
 ========================================================= */
@@ -2228,4 +2467,6 @@ INITIALISE
 displayMealSelection();
 
 renderShoppingList();
+
+renderCommonIngredients();
 
