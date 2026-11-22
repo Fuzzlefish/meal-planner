@@ -1433,36 +1433,157 @@ body[data-theme="red"] {
 }
 
 
-.secondaryShoppingButton {
+/* =========================================================
+   SHOPPING MODE
+========================================================= */
+
+.shoppingMode {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.shoppingModeHeader {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    min-height: 65px;
+    text-align: center;
+}
+
+.shoppingModeTitle {
+    width: 100%;
+    text-align: center;
+    padding: 0 45px;
+}
+
+.shoppingModeHeader h1 {
+    margin: 0 0 5px;
+}
+
+.shoppingModeHeader p {
+    margin: 0;
+    color: var(--heading);
+    opacity: 0.8;
+}
+
+.exitShoppingModeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
     background: var(--tag);
     color: var(--text);
+    font-size: 27px;
+    line-height: 1;
+    cursor: pointer;
     box-shadow: none;
 }
 
-
-.secondaryShoppingButton:hover {
+.exitShoppingModeButton:hover {
     background: var(--button);
     color: white;
 }
 
-.shoppingListViewControls {
-    display: flex;
-    gap: 8px;
-    margin: 0 0 16px;
+.shoppingModeCategory {
+    margin: 24px 0 9px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 1.1rem;
 }
 
-.shoppingListViewControls button {
-    flex: 1;
-    margin: 0;
-    background: var(--secondary);
-    color: var(--text);
+.shoppingModeItem {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    width: 100%;
+    min-height: 76px;
+    margin: 9px 0;
+    padding: 14px;
     border: 1px solid var(--border);
-    box-shadow: none;
+    border-radius: 14px;
+    background: var(--card);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    text-align: left;
 }
 
-.shoppingListViewControls button.active {
-    background: var(--button);
-    color: white;
+.shoppingModeItem:focus-visible {
+    outline: 2px solid var(--button);
+    outline-offset: 2px;
+}
+
+.shoppingModeItem .shoppingCheckbox {
+    width: 28px !important;
+    height: 28px !important;
+}
+
+.shoppingModeItem .shoppingItemName {
+    font-size: 1.08rem;
+}
+
+.shoppingModeItem .shoppingItemMeasurement {
+    font-size: 0.96rem;
+}
+
+@media (max-width: 600px) {
+    .shoppingMode {
+        padding: 12px;
+    }
+
+    .shoppingModeTitle {
+        padding: 0 35px;
+    }
+
+    .shoppingModeHeader {
+        margin-bottom: 20px;
+    }
+
+    .exitShoppingModeButton {
+        width: 34px;
+        height: 34px;
+        font-size: 24px;
+    }
+}
+
+
+/* =========================================================
+   SHOPPING MODE BUTTON - DISTINCTIVE STYLE
+========================================================= */
+
+.shoppingSection .shoppingSectionHeader #shoppingModeButton {
+    background: var(--tag) !important;
+    color: var(--text) !important;
+    border: 2px solid var(--button) !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.12) !important;
+    transform: none !important;
+}
+
+.shoppingSection .shoppingSectionHeader #shoppingModeButton:hover {
+    background: var(--button) !important;
+    color: #ffffff !important;
+    border-color: var(--button) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18) !important;
+}
+
+.shoppingSection .shoppingSectionHeader #shoppingModeButton:active {
+    transform: translateY(0) !important;
 }
 
 

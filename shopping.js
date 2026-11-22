@@ -37,6 +37,13 @@ const confirmRemoveAllManualItemsButton =
 const shoppingListViewControls =
     document.querySelector(".shoppingListViewControls");
 
+const shoppingPage = document.querySelector("#shoppingPage");
+const shoppingMode = document.querySelector("#shoppingMode");
+const shoppingModeButton = document.querySelector("#shoppingModeButton");
+const exitShoppingModeButton = document.querySelector("#exitShoppingModeButton");
+const shoppingModeList = document.querySelector("#shoppingModeList");
+const shoppingModeEmpty = document.querySelector("#shoppingModeEmpty");
+
 
 /* =========================================================
 MODAL
@@ -127,6 +134,7 @@ STATE
 let editingShoppingItemId = null;
 
 let deletingShoppingItemId = null;
+let isShoppingMode = false;
 
 removeAllManualItemsButton?.addEventListener("click", () => {
     removeAllManualItemsModal.style.display = "flex";
@@ -1301,7 +1309,7 @@ function createShoppingCheckbox(
              * completely in sync.
              */
 
-            renderShoppingList();
+            refreshShoppingViews();
 
         }
     );
@@ -1392,6 +1400,85 @@ function renderShoppingList() {
     updateShoppingListViewControls();
 
 }
+
+function getShoppingModeMeasurement(ingredient, type) {
+    if (type === "meal" && ingredient.hasNumericAmount) {
+        return formatCombinedAmount(ingredient.amount, ingredient.baseUnit);
+    }
+    const amount = ingredient.amount ? `${ingredient.amount} ` : "";
+    return `${amount}${ingredient.unit || ""}`.trim();
+}
+
+function renderShoppingModeItem(itemData, itemType, container) {
+    const item = document.createElement("div");
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
+    item.className = "shoppingModeItem";
+    const status = getShoppingItemStatus(itemData, itemType);
+    const checkbox = createShoppingCheckbox(itemData, itemType, item);
+    checkbox.tabIndex = -1;
+    const content = document.createElement("span");
+    content.className = "shoppingItemContent";
+    const name = document.createElement("span");
+    name.className = "shoppingItemName";
+    name.textContent = itemData.name;
+    const measurement = document.createElement("span");
+    measurement.className = "shoppingItemMeasurement";
+    measurement.textContent = getShoppingModeMeasurement(itemData, itemType);
+    content.append(name, measurement);
+    item.append(checkbox, content);
+    applyShoppingItemStatus(item, checkbox, status);
+    item.addEventListener("click", event => {
+        if (event.target === checkbox) return;
+        checkbox.click();
+    });
+    item.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            checkbox.click();
+        }
+    });
+    container.appendChild(item);
+}
+
+function renderShoppingMode() {
+    if (!shoppingModeList || !shoppingModeEmpty) return;
+    shoppingModeList.innerHTML = "";
+    const mealItems = buildMealIngredients();
+    const manualItems = getShoppingItems();
+    const groups = new Map();
+    const add = (item, type) => {
+        const category = getShoppingCategory(item.name);
+        if (!groups.has(category)) groups.set(category, []);
+        groups.get(category).push({ item, type });
+    };
+    mealItems.forEach(item => add(item, "meal"));
+    manualItems.forEach(item => add(item, "manual"));
+    shoppingModeEmpty.hidden = groups.size !== 0;
+    groups.forEach((items, category) => {
+        const heading = document.createElement("h2");
+        heading.className = "shoppingModeCategory";
+        heading.textContent = category;
+        shoppingModeList.appendChild(heading);
+        items.forEach(({ item, type }) => renderShoppingModeItem(item, type, shoppingModeList));
+    });
+}
+
+function refreshShoppingViews() {
+    renderShoppingList();
+    if (isShoppingMode) renderShoppingMode();
+}
+
+function setShoppingMode(active) {
+    isShoppingMode = active;
+    if (shoppingPage) shoppingPage.hidden = active;
+    if (shoppingMode) shoppingMode.hidden = !active;
+    if (active) renderShoppingMode();
+    else renderShoppingList();
+}
+
+shoppingModeButton?.addEventListener("click", () => setShoppingMode(true));
+exitShoppingModeButton?.addEventListener("click", () => setShoppingMode(false));
 
 
 /* =========================================================

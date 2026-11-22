@@ -180,6 +180,10 @@
                     Remove All
                 </button>
 
+                <button id="shoppingModeButton">
+                    Shopping Mode
+                </button>
+
             </div>
 
             <div
@@ -213,6 +217,25 @@
         </section>
 
     </main>
+
+
+<section id="shoppingMode" class="shoppingMode" hidden aria-label="Shopping Mode">
+    <div class="shoppingModeHeader">
+        <div class="shoppingModeTitle">
+            <h1>Shopping Mode</h1>
+            <p>Tap an item to cycle through bought, unavailable, and needed.</p>
+        </div>
+        <button id="exitShoppingModeButton"
+                class="exitShoppingModeButton"
+                aria-label="Exit Shopping Mode"
+                title="Exit Shopping Mode">
+            &times;
+        </button>
+    </div>
+
+    <div id="shoppingModeList"></div>
+    <p id="shoppingModeEmpty" class="emptyShoppingMessage">Your shopping list is empty.</p>
+</section>
 
 
     <!-- =====================================================
