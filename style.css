@@ -1687,7 +1687,9 @@ body[data-theme="red"] {
     font-size: 1.05rem;
 }
 
-
+.shoppingListViewControls {
+  padding-bottom: 10px;
+}
 .shoppingListSectionHeading:first-child {
     margin-top: 0;
 }
@@ -2983,4 +2985,21 @@ COMMONLY USED INGREDIENTS
 
 .commonIngredientAddButton:hover {
     background: var(--button-hover);
+}
+
+
+#removeAllPlannedMealsButton {
+  background: var(--tag);
+  border: 2px solid var(--button);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#removeAllPlannedMealsButton:hover {
+  background: var(--button);
+  color: white;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
 }
