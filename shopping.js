@@ -43,6 +43,7 @@ const shoppingModeButton = document.querySelector("#shoppingModeButton");
 const exitShoppingModeButton = document.querySelector("#exitShoppingModeButton");
 const shoppingModeList = document.querySelector("#shoppingModeList");
 const shoppingModeEmpty = document.querySelector("#shoppingModeEmpty");
+const priceOverview = document.querySelector("#priceOverview");
 
 
 /* =========================================================
@@ -1398,7 +1399,42 @@ function renderShoppingList() {
 
 
     updateShoppingListViewControls();
+    renderPriceOverview(mealIngredients, manualItems);
 
+}
+
+function normalisePriceName(value) {
+    return String(value || "").toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\b(s|es)\b/g, "").trim();
+}
+function getPriceOverrides() { return JSON.parse(localStorage.getItem("shoppingPriceOverrides")) || {}; }
+function savePriceOverrides(value) { localStorage.setItem("shoppingPriceOverrides", JSON.stringify(value)); }
+function getPriceMatch(item) {
+    const key = normalisePriceName(item.name), override = getPriceOverrides()[key];
+    if (override) return override;
+    const words = key.split(" ");
+    return FOOD_PRICE_DATABASE.find(product => [product.name, ...product.aliases]
+        .some(name => { const candidate = normalisePriceName(name); return candidate === key || (words.length > 1 && candidate.includes(key)) || key.includes(candidate); }));
+}
+function estimatePrice(item) {
+    const product = getPriceMatch(item); if (!product) return null;
+    let amount = Number(item.amount); let unit = String(item.baseUnit || item.unit || "").toLowerCase();
+    if (!Number.isFinite(amount) || amount <= 0) amount = product.packageSize;
+    if (unit === "kg") { amount *= 1000; unit = "g"; } if (unit === "l") { amount *= 1000; unit = "ml"; }
+    if (unit && unit !== product.unit) return null;
+    const ingredientCost = amount / product.packageSize * product.packagePrice;
+    return { product, ingredientCost, shoppingCost: Math.ceil(amount / product.packageSize) * product.packagePrice };
+}
+function renderPriceOverview(mealItems, manualItems) {
+    if (!priceOverview || typeof FOOD_PRICE_DATABASE === "undefined") return;
+    const items = [...mealItems, ...manualItems], estimates = items.map(item => ({ item, estimate: estimatePrice(item) }));
+    const matched = estimates.filter(row => row.estimate), unmatched = estimates.length - matched.length;
+    const ingredient = matched.reduce((sum, row) => sum + row.estimate.ingredientCost, 0);
+    const shopping = matched.reduce((sum, row) => sum + row.estimate.shoppingCost, 0);
+    priceOverview.innerHTML = `<h3>Estimated cost</h3><p class="priceTotals">£${shopping.toFixed(2)} <span>to buy packages</span> · £${ingredient.toFixed(2)} <span>ingredients used</span></p><p class="normalisationHelp">${matched.length} matched · ${unmatched} unmatched · UK estimates, reviewed ${PRICE_DATABASE_UPDATED}.</p>`;
+    const list = document.createElement("div"); list.className = "priceBreakdown";
+    estimates.forEach(({ item, estimate }) => { const row = document.createElement("button"); row.type = "button"; row.className = "priceRow"; row.textContent = estimate ? `${item.name}: £${estimate.ingredientCost.toFixed(2)} used / £${estimate.shoppingCost.toFixed(2)} pack` : `${item.name}: no reliable price match`;
+        row.addEventListener("click", () => { const price = prompt(`Override package price for ${item.name} in GBP (blank cancels):`, estimate?.product.packagePrice || ""); if (price === null || !Number.isFinite(Number(price))) return; const base = estimate?.product || { name: item.name, aliases: [], unit: String(item.unit || "piece").toLowerCase(), packageSize: Number(item.amount) || 1 }; const overrides = getPriceOverrides(); overrides[normalisePriceName(item.name)] = { ...base, packagePrice: Number(price) }; savePriceOverrides(overrides); renderShoppingList(); }); list.appendChild(row); });
+    priceOverview.appendChild(list);
 }
 
 function getShoppingModeMeasurement(ingredient, type) {
@@ -1454,6 +1490,12 @@ function renderShoppingMode() {
     };
     mealItems.forEach(item => add(item, "meal"));
     manualItems.forEach(item => add(item, "manual"));
+    const matched = [...mealItems, ...manualItems].map(estimatePrice).filter(Boolean);
+    const total = matched.reduce((sum, estimate) => sum + estimate.shoppingCost, 0);
+    const totalLine = document.createElement("p");
+    totalLine.className = "normalisationHelp";
+    totalLine.textContent = `Estimated basket: £${total.toFixed(2)} (${matched.length} matched items)`;
+    shoppingModeList.appendChild(totalLine);
     shoppingModeEmpty.hidden = groups.size !== 0;
     groups.forEach((items, category) => {
         const heading = document.createElement("h2");

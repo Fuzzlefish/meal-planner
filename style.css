@@ -1432,6 +1432,13 @@ body[data-theme="red"] {
     margin: 0;
 }
 
+.priceOverview { margin-top: 18px; padding: 14px; background: var(--secondary); border: 1px solid var(--border); border-radius: 14px; text-align: center; }
+.priceOverview h3 { margin: 0 0 6px; }
+.priceTotals { margin: 0; color: var(--heading); font-size: 1.15rem; font-weight: 700; }
+.priceTotals span { font-size: .82rem; font-weight: 400; }
+.priceBreakdown { display: grid; gap: 5px; margin-top: 10px; }
+.priceRow { width: 100%; margin: 0; padding: 8px 10px; background: var(--card); color: var(--text); box-shadow: none; text-align: left; font-size: .84rem; }
+
 
 /* =========================================================
    SHOPPING MODE
