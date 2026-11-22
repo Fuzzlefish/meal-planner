@@ -241,6 +241,7 @@ if (mealList?.parentNode) {
 let currentMealFilter = "";
 let currentIngredientSearch = "";
 let mealLibraryView = "list";
+let librarySearchMode = "ingredient";
 
 const librarySearchControls = document.createElement("div");
 librarySearchControls.className = "mealSearchControls";
@@ -248,6 +249,10 @@ librarySearchControls.innerHTML = `
     <div class="ingredientNameWrapper mealIngredientSearchWrapper">
         <input type="search" class="ingredientMealSearch" placeholder="Search by ingredient" autocomplete="off">
         <div class="ingredientSuggestions"></div>
+    </div>
+    <div class="mealViewControls" role="group" aria-label="Search mode">
+        <button type="button" data-search-mode="ingredient" aria-pressed="true">Ingredient</button>
+        <button type="button" data-search-mode="name" aria-pressed="false">Meal name</button>
     </div>
     <div class="mealViewControls" aria-label="Meal Library view">
         <button type="button" data-view="list" aria-pressed="true">List</button>
@@ -279,8 +284,20 @@ function mealMatchesIngredient(meal, query) {
     });
 }
 
+function mealMatchesSearch(meal, query) {
+    if (librarySearchMode === "ingredient") return mealMatchesIngredient(meal, query);
+    return String(meal.name || "").toLowerCase().includes(String(query || "").trim().toLowerCase());
+}
+
+function getLibraryMealNameSuggestions(value) {
+    const search = String(value || "").trim().toLowerCase();
+    if (search.length < 2) return [];
+    return getMeals().filter(meal => String(meal.name || "").toLowerCase().includes(search)).slice(0, 6);
+}
+
 function setupMealIngredientSearch(input, suggestionBox, onSearch) {
     let timeout = null;
+    let hasFocused = false;
     const hideSuggestions = () => {
         suggestionBox.innerHTML = "";
         suggestionBox.style.display = "none";
@@ -295,27 +312,27 @@ function setupMealIngredientSearch(input, suggestionBox, onSearch) {
 
         timeout = setTimeout(() => {
             const value = input.value.trim();
-            const suggestions = typeof findIngredientSuggestions === "function"
+            const suggestions = librarySearchMode === "ingredient" && typeof findIngredientSuggestions === "function"
                 ? findIngredientSuggestions(value)
-                : [];
+                : librarySearchMode === "name" ? getLibraryMealNameSuggestions(value) : [];
 
-            if (value.length < 2 || suggestions.length === 0) {
+            if (!hasFocused || document.activeElement !== input || value.length < 2 || suggestions.length === 0) {
                 return;
             }
 
             const title = document.createElement("div");
             title.className = "ingredientSuggestionTitle";
-            title.textContent = "Ingredients";
+            title.textContent = librarySearchMode === "ingredient" ? "Ingredients" : "Meals";
             suggestionBox.appendChild(title);
 
             suggestions.forEach(suggestion => {
                 const button = document.createElement("button");
                 button.type = "button";
                 button.className = "ingredientSuggestion";
-                button.textContent = getIngredientDisplayName(suggestion);
+                button.textContent = librarySearchMode === "ingredient" ? getIngredientDisplayName(suggestion) : suggestion.name;
                 button.addEventListener("pointerdown", event => {
                     event.preventDefault();
-                    input.value = getIngredientDisplayName(suggestion);
+                    input.value = librarySearchMode === "ingredient" ? getIngredientDisplayName(suggestion) : suggestion.name;
                     hideSuggestions();
                     onSearch(input.value);
                 });
@@ -325,12 +342,24 @@ function setupMealIngredientSearch(input, suggestionBox, onSearch) {
         }, 200);
     });
 
+    input.addEventListener("focus", () => { hasFocused = true; });
     input.addEventListener("blur", () => setTimeout(hideSuggestions, 200));
 }
 
 setupMealIngredientSearch(libraryIngredientSearch, librarySuggestionBox, value => {
     currentIngredientSearch = value.trim();
     displayMeals();
+});
+
+librarySearchControls.querySelectorAll("button[data-search-mode]").forEach(button => {
+    button.addEventListener("click", () => {
+        librarySearchMode = button.dataset.searchMode;
+        librarySearchControls.querySelectorAll("button[data-search-mode]").forEach(control =>
+            control.setAttribute("aria-pressed", String(control === button))
+        );
+        libraryIngredientSearch.placeholder = librarySearchMode === "ingredient" ? "Search by ingredient" : "Search by meal name";
+        displayMeals();
+    });
 });
 
 librarySearchControls.querySelector(".mealViewControls").addEventListener("click", event => {
@@ -516,6 +545,13 @@ function saveMeals(meals) {
     );
 }
 
+function recordRecentMeal(mealId) {
+    const history = (JSON.parse(localStorage.getItem("mealUsageHistory")) || [])
+        .filter(entry => entry.mealId !== mealId);
+    history.unshift({ mealId, usedAt: new Date().toISOString() });
+    localStorage.setItem("mealUsageHistory", JSON.stringify(history.slice(0, 8)));
+}
+
 
 /* =========================================================
    ADD MEAL
@@ -651,6 +687,7 @@ saveMealButton?.addEventListener(
 
 
         saveMeals(meals);
+        recordRecentMeal(meal.id);
 
         closeAddMealForm();
 
@@ -861,6 +898,7 @@ function setupIngredientSuggestions(
 ) {
 
     let timeout = null;
+    let hasFocused = false;
 
 
     function hideSuggestions() {
@@ -896,7 +934,7 @@ function setupIngredientSuggestions(
                         input.value.trim();
 
 
-                    if (value.length < 2) {
+                    if (!hasFocused || document.activeElement !== input || value.length < 2) {
                         return;
                     }
 
@@ -985,6 +1023,10 @@ function setupIngredientSuggestions(
         }
     );
 
+
+    input.addEventListener("focus", () => {
+        hasFocused = true;
+    });
 
     /* Clear suggestions when focus leaves */
 
@@ -1258,7 +1300,7 @@ function displayMeals() {
 
     const filteredMeals = meals.filter(meal =>
         (!currentMealFilter || (meal.tags || []).includes(currentMealFilter)) &&
-        mealMatchesIngredient(meal, currentIngredientSearch)
+        mealMatchesSearch(meal, currentIngredientSearch)
     );
 
     mealList.classList.toggle("mealGrid", mealLibraryView === "grid");
@@ -1476,7 +1518,8 @@ function getShareableMeal(meal) {
             unit: ingredient.unit || "",
             name: ingredient.name || ""
         })),
-        videoLink: meal.videoLink || ""
+        videoLink: meal.videoLink || "",
+        favourite: Boolean(meal.favourite)
     };
 }
 
@@ -1608,8 +1651,18 @@ function offerSharedMealImport() {
 
     const confirmImport = createButton("Add Meal", () => {
         const meals = getMeals();
+        const imported = getShareableMeal(meal);
+        const exists = meals.some(existing =>
+            JSON.stringify(getShareableMeal(existing)) === JSON.stringify(imported)
+        );
+        if (exists) {
+            modal.remove();
+            clearSharedMealHash();
+            alert("This meal is already in your Meal Library.");
+            return;
+        }
         meals.push({
-            ...getShareableMeal(meal),
+            ...imported,
             id: crypto.randomUUID()
         });
         saveMeals(meals);
@@ -2125,3 +2178,14 @@ document.addEventListener(
 
 displayMeals();
 offerSharedMealImport();
+
+document.querySelectorAll(".mealModal > .modalContent").forEach(content => {
+    if (content.querySelector(".modalCloseButton")) return;
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "modalCloseButton";
+    close.textContent = "×";
+    close.setAttribute("aria-label", "Close dialog");
+    close.addEventListener("click", () => { content.parentElement.style.display = "none"; });
+    content.prepend(close);
+});

@@ -8,6 +8,13 @@ const mealFilters = document.querySelector("#mealFilters");
 const plannerIngredientSearch = document.querySelector("#plannerIngredientSearch");
 const plannerIngredientSuggestions = document.querySelector("#plannerIngredientSuggestions");
 const plannerMealViewControls = document.querySelector("#plannerMealViewControls");
+const plannerSearchModeControls = document.querySelector("#plannerSearchModeControls");
+const plannerFilterButton = document.querySelector("#plannerFilterButton");
+const recentMeals = document.querySelector("#recentMeals");
+const removeAllPlannedMealsButton = document.querySelector("#removeAllPlannedMealsButton");
+const removeAllMealsModal = document.querySelector("#removeAllMealsModal");
+const cancelRemoveAllMealsButton = document.querySelector("#cancelRemoveAllMealsButton");
+const confirmRemoveAllMealsButton = document.querySelector("#confirmRemoveAllMealsButton");
 
 const ingredientsModal = document.querySelector("#ingredientsModal");
 const ingredientsModalTitle =
@@ -74,6 +81,7 @@ let selectedMealType = null;
 let selectedCategory = "all";
 let selectedIngredientSearch = "";
 let availableMealView = "list";
+let plannerSearchMode = "ingredient";
 
 let renamingPresetId = null;
 
@@ -101,6 +109,16 @@ function saveMealPlan(plan) {
         "mealPlan",
         JSON.stringify(plan)
     );
+}
+
+function getMealUsageHistory() {
+    return JSON.parse(localStorage.getItem("mealUsageHistory")) || [];
+}
+
+function recordMealUse(mealId) {
+    const history = getMealUsageHistory().filter(entry => entry.mealId !== mealId);
+    history.unshift({ mealId, usedAt: new Date().toISOString() });
+    localStorage.setItem("mealUsageHistory", JSON.stringify(history.slice(0, 8)));
 }
 
 
@@ -189,10 +207,14 @@ if (mealPlan) {
 
         selectedCategory = "all";
         selectedIngredientSearch = "";
+        plannerSearchMode = "ingredient";
         if (plannerIngredientSearch) plannerIngredientSearch.value = "";
+
+        updatePlannerSearchModeControls();
 
         displayFilters();
         displayMeals();
+        displayRecentMeals();
 
         mealModal.style.display = "flex";
     });
@@ -212,14 +234,20 @@ function displayFilters() {
 
     mealFilters.innerHTML = "";
 
-    const allButton =
-        document.createElement("button");
+    const createOption = (label, value) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mealFilterOption";
+        button.dataset.category = value;
+        const bubble = document.createElement("span");
+        bubble.className = "mealFilterBubble";
+        bubble.textContent = label;
+        if (value !== "all") bubble.classList.add(`tag-${value.toLowerCase().replace(/\s+/g, "-")}`);
+        button.appendChild(bubble);
+        mealFilters.appendChild(button);
+    };
 
-    allButton.textContent = "All";
-    allButton.classList.add("filterButton");
-    allButton.dataset.category = "all";
-
-    mealFilters.appendChild(allButton);
+    createOption("All meals", "all");
 
     const meals = getMeals();
     const categories = new Set();
@@ -238,16 +266,11 @@ function displayFilters() {
 
     categories.forEach((category) => {
 
-        const button =
-            document.createElement("button");
-
-        button.textContent = category;
-        button.classList.add("filterButton");
-        button.dataset.category = category;
-
-        mealFilters.appendChild(button);
+        createOption(category, category);
 
     });
+
+    updatePlannerFilterButton();
 
 }
 
@@ -279,7 +302,7 @@ function displayMeals() {
     const filteredMeals = meals.filter(meal => {
         const tags = meal.tags || [];
         return (selectedCategory === "all" || tags.includes(selectedCategory)) &&
-            mealMatchesIngredient(meal, selectedIngredientSearch);
+            mealMatchesSearch(meal, selectedIngredientSearch);
     });
 
     if (filteredMeals.length === 0) {
@@ -346,17 +369,17 @@ if (mealFilters) {
         (event) => {
 
             if (
-                !event.target.classList.contains(
-                    "filterButton"
-                )
+                !event.target.closest(".mealFilterOption")
             ) {
                 return;
             }
 
-            selectedCategory =
-                event.target.dataset.category;
+            selectedCategory = event.target.closest(".mealFilterOption").dataset.category;
 
             displayMeals();
+            updatePlannerFilterButton();
+            mealFilters.classList.remove("open");
+            plannerFilterButton?.setAttribute("aria-expanded", "false");
         }
     );
 
@@ -430,6 +453,7 @@ function selectMeal(meal) {
     saveMealPlanLeftovers(leftovers);
 
     saveMealPlan(plan);
+    recordMealUse(meal.id);
 
     displaySavedMeal(
         selectedMealSection,
@@ -441,6 +465,8 @@ function selectMeal(meal) {
     if (mealModal) {
         mealModal.style.display = "none";
     }
+
+    displayRecentMeals();
 
 }
 
@@ -511,6 +537,30 @@ function removeMealFromPlan() {
     saveMealPlanLeftovers(leftovers);
 
 }
+
+function removeAllPlannedMeals() {
+    saveMealPlan({});
+    saveMealPlanLeftovers({});
+    document.querySelectorAll(".meal ul").forEach(list => { list.innerHTML = ""; });
+    updateAllAddMealAvailability();
+}
+
+removeAllPlannedMealsButton?.addEventListener("click", () => {
+    removeAllMealsModal.style.display = "flex";
+});
+
+cancelRemoveAllMealsButton?.addEventListener("click", () => {
+    removeAllMealsModal.style.display = "none";
+});
+
+confirmRemoveAllMealsButton?.addEventListener("click", () => {
+    removeAllPlannedMeals();
+    removeAllMealsModal.style.display = "none";
+});
+
+removeAllMealsModal?.addEventListener("click", event => {
+    if (event.target === removeAllMealsModal) removeAllMealsModal.style.display = "none";
+});
 
 
 /* =========================================================
@@ -958,9 +1008,58 @@ function mealMatchesIngredient(meal, query) {
     });
 }
 
+function mealMatchesSearch(meal, query) {
+    if (plannerSearchMode === "ingredient") return mealMatchesIngredient(meal, query);
+    return String(meal.name || "").toLowerCase().includes(String(query || "").trim().toLowerCase());
+}
+
+function getMealNameSuggestions(value) {
+    const search = String(value || "").trim().toLowerCase();
+    if (search.length < 2) return [];
+    return getMeals().filter(meal => String(meal.name || "").toLowerCase().includes(search)).slice(0, 6);
+}
+
+function updatePlannerSearchModeControls() {
+    if (!plannerSearchModeControls || !plannerIngredientSearch) return;
+    plannerSearchModeControls.querySelectorAll("button").forEach(button =>
+        button.setAttribute("aria-pressed", String(button.dataset.searchMode === plannerSearchMode))
+    );
+    plannerIngredientSearch.placeholder = plannerSearchMode === "ingredient" ? "Search by ingredient" : "Search by meal name";
+}
+
+function updatePlannerFilterButton() {
+    if (!plannerFilterButton) return;
+    const text = plannerFilterButton.querySelector(".mealFilterButtonText");
+    if (text) text.textContent = selectedCategory === "all" ? "All meals" : selectedCategory;
+    plannerFilterButton.className = "mealFilterButton";
+    if (selectedCategory !== "all") plannerFilterButton.classList.add(`tag-${selectedCategory.toLowerCase().replace(/\s+/g, "-")}`);
+}
+
+function displayRecentMeals() {
+    if (!recentMeals) return;
+    recentMeals.innerHTML = "";
+    const byId = new Map(getMeals().map(meal => [meal.id, meal]));
+    const meals = getMealUsageHistory().map(entry => byId.get(entry.mealId)).filter(Boolean).slice(0, 5);
+    recentMeals.hidden = meals.length === 0;
+    if (!meals.length) return;
+    const heading = document.createElement("h3");
+    heading.textContent = "Recently Used";
+    const choices = document.createElement("div");
+    choices.className = "recentMealChoices";
+    meals.forEach(meal => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = meal.name;
+        button.addEventListener("click", () => selectMeal(meal));
+        choices.appendChild(button);
+    });
+    recentMeals.append(heading, choices);
+}
+
 function setupPlannerIngredientSearch() {
     if (!plannerIngredientSearch || !plannerIngredientSuggestions) return;
     let timeout;
+    let hasFocused = false;
     const hide = () => {
         plannerIngredientSuggestions.innerHTML = "";
         plannerIngredientSuggestions.style.display = "none";
@@ -974,16 +1073,19 @@ function setupPlannerIngredientSearch() {
         displayMeals();
         hide();
         timeout = setTimeout(() => {
-            const suggestions = findIngredientSuggestions(plannerIngredientSearch.value.trim());
-            if (plannerIngredientSearch.value.trim().length < 2 || !suggestions.length) return;
+            const value = plannerIngredientSearch.value.trim();
+            const suggestions = plannerSearchMode === "ingredient"
+                ? findIngredientSuggestions(value)
+                : getMealNameSuggestions(value);
+            if (!hasFocused || document.activeElement !== plannerIngredientSearch || plannerIngredientSearch.value.trim().length < 2 || !suggestions.length) return;
             suggestions.forEach(suggestion => {
                 const option = document.createElement("button");
                 option.type = "button";
                 option.className = "ingredientSuggestion";
-                option.textContent = getIngredientDisplayName(suggestion);
+                option.textContent = plannerSearchMode === "ingredient" ? getIngredientDisplayName(suggestion) : suggestion.name;
                 option.addEventListener("pointerdown", event => {
                     event.preventDefault();
-                    plannerIngredientSearch.value = getIngredientDisplayName(suggestion);
+                    plannerIngredientSearch.value = plannerSearchMode === "ingredient" ? getIngredientDisplayName(suggestion) : suggestion.name;
                     selectedIngredientSearch = plannerIngredientSearch.value;
                     hide();
                     displayMeals();
@@ -993,8 +1095,29 @@ function setupPlannerIngredientSearch() {
             plannerIngredientSuggestions.style.display = "block";
         }, 200);
     });
+    plannerIngredientSearch.addEventListener("focus", () => { hasFocused = true; });
     plannerIngredientSearch.addEventListener("blur", () => setTimeout(hide, 200));
 }
+
+plannerSearchModeControls?.addEventListener("click", event => {
+    const button = event.target.closest("button[data-search-mode]");
+    if (!button) return;
+    plannerSearchMode = button.dataset.searchMode;
+    updatePlannerSearchModeControls();
+    displayMeals();
+});
+
+plannerFilterButton?.addEventListener("click", () => {
+    const open = mealFilters?.classList.toggle("open");
+    plannerFilterButton.setAttribute("aria-expanded", String(Boolean(open)));
+});
+
+document.addEventListener("click", event => {
+    const wrapper = event.target.closest(".plannerMealFilterWrapper");
+    if (wrapper || !mealFilters?.classList.contains("open")) return;
+    mealFilters.classList.remove("open");
+    plannerFilterButton?.setAttribute("aria-expanded", "false");
+});
 
 plannerMealViewControls?.addEventListener("click", event => {
     const button = event.target.closest("button[data-view]");
@@ -2412,3 +2535,14 @@ document
 ========================================================= */
 
 loadMealPlan();
+
+document.querySelectorAll("#mealModal > .modalContent, .mealModal > .modalContent").forEach(content => {
+    if (content.querySelector(".modalCloseButton")) return;
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "modalCloseButton";
+    close.textContent = "×";
+    close.setAttribute("aria-label", "Close dialog");
+    close.addEventListener("click", () => { content.parentElement.style.display = "none"; });
+    content.prepend(close);
+});

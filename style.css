@@ -432,6 +432,25 @@ label {
   margin-top: 0;
 }
 
+.modalContent { position: relative; }
+
+.modalCloseButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--secondary);
+  color: var(--heading);
+  box-shadow: none;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
 #mealModalTitle {
   color: var(--heading);
   font-size: 1rem;
@@ -527,6 +546,37 @@ label {
 
 .mealViewControls button[aria-pressed="true"] {
   background: var(--button-hover);
+}
+
+.recentMeals {
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--secondary);
+}
+
+.recentMeals h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.recentMealChoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.recentMealChoices button {
+  margin: 0;
+  padding: 7px 11px;
+  background: var(--meal);
+  color: var(--text);
+  box-shadow: none;
+}
+
+.plannerMealFilterWrapper {
+  margin: 14px auto;
 }
 
 .mealGrid {

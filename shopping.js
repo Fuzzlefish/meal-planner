@@ -25,6 +25,15 @@ const selectAllMealsButton =
 const addShoppingItemButton =
     document.querySelector("#addShoppingItemButton");
 
+const removeAllManualItemsButton =
+    document.querySelector("#removeAllManualItemsButton");
+const removeAllManualItemsModal =
+    document.querySelector("#removeAllManualItemsModal");
+const cancelRemoveAllManualItemsButton =
+    document.querySelector("#cancelRemoveAllManualItemsButton");
+const confirmRemoveAllManualItemsButton =
+    document.querySelector("#confirmRemoveAllManualItemsButton");
+
 const shoppingListViewControls =
     document.querySelector(".shoppingListViewControls");
 
@@ -118,6 +127,26 @@ STATE
 let editingShoppingItemId = null;
 
 let deletingShoppingItemId = null;
+
+removeAllManualItemsButton?.addEventListener("click", () => {
+    removeAllManualItemsModal.style.display = "flex";
+});
+
+cancelRemoveAllManualItemsButton?.addEventListener("click", () => {
+    removeAllManualItemsModal.style.display = "none";
+});
+
+confirmRemoveAllManualItemsButton?.addEventListener("click", () => {
+    /* shoppingList stores manual entries only; meal-derived items are rebuilt
+       from the current plan and therefore remain untouched. */
+    saveShoppingItems([]);
+    removeAllManualItemsModal.style.display = "none";
+    renderShoppingList();
+});
+
+removeAllManualItemsModal?.addEventListener("click", event => {
+    if (event.target === removeAllManualItemsModal) removeAllManualItemsModal.style.display = "none";
+});
 
 
 /* =========================================================
@@ -2467,6 +2496,17 @@ INITIALISE
 displayMealSelection();
 
 renderShoppingList();
+
+document.querySelectorAll(".mealModal > .modalContent").forEach(content => {
+    if (content.querySelector(".modalCloseButton")) return;
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "modalCloseButton";
+    close.textContent = "×";
+    close.setAttribute("aria-label", "Close dialog");
+    close.addEventListener("click", () => { content.parentElement.style.display = "none"; });
+    content.prepend(close);
+});
 
 renderCommonIngredients();
 

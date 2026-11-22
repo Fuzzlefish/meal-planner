@@ -45,6 +45,10 @@
     <button id="loadPresetsButton">
         📋 Load Presets
     </button>
+
+    <button id="removeAllPlannedMealsButton" class="secondaryShoppingButton">
+        Remove All Meals
+    </button>
 </div>
 
 
@@ -241,17 +245,25 @@
                 <input id="plannerIngredientSearch" type="search" placeholder="Search by ingredient" autocomplete="off">
                 <div id="plannerIngredientSuggestions" class="ingredientSuggestions"></div>
             </div>
+            <div id="plannerSearchModeControls" class="mealViewControls" role="group" aria-label="Search mode">
+                <button type="button" data-search-mode="ingredient" aria-pressed="true">Ingredient</button>
+                <button type="button" data-search-mode="name" aria-pressed="false">Meal name</button>
+            </div>
             <div id="plannerMealViewControls" class="mealViewControls" aria-label="Available meal view">
                 <button type="button" data-view="list" aria-pressed="true">List</button>
                 <button type="button" data-view="grid" aria-pressed="false">Grid</button>
             </div>
         </div>
 
-        <div id="mealFilters">
-            <button class="filterButton" data-category="all">
-                All
+        <div class="mealFilterWrapper plannerMealFilterWrapper">
+            <button type="button" id="plannerFilterButton" class="mealFilterButton" aria-label="Filter meal types" aria-expanded="false">
+                <span class="mealFilterButtonText">All meals</span>
+                <span class="mealFilterArrow">▼</span>
             </button>
+            <div id="mealFilters" class="mealFilterOptions"></div>
         </div>
+
+        <div id="recentMeals" class="recentMeals"></div>
 
         <div id="availableMeals"></div>
 
@@ -261,6 +273,17 @@
 
     </div>
 
+</div>
+
+<div id="removeAllMealsModal" class="mealModal">
+    <div class="modalContent">
+        <h2>Remove all planned meals?</h2>
+        <p>All meals will be removed from this week's plan. Your Meal Library will not be changed.</p>
+        <div class="modalButtons">
+            <button id="cancelRemoveAllMealsButton" class="secondaryPresetButton">Cancel</button>
+            <button id="confirmRemoveAllMealsButton" class="dangerPresetButton">Remove All</button>
+        </div>
+    </div>
 </div>
 
 
