@@ -253,6 +253,7 @@ const FOOD_PRICE_DATABASE = [
   ["pizza bases", [], "piece", 2, 1.50],
   ["breadcrumbs", ["dried breadcrumbs"], "g", 175, 0.80],
 
+
   // =========================================================
   // RICE, PASTA, NOODLES & GRAINS
   // =========================================================
@@ -280,6 +281,8 @@ const FOOD_PRICE_DATABASE = [
   ["oats", ["porridge oats", "rolled oats"], "g", 1000, 1.50],
   ["granola", [], "g", 500, 2.00],
   ["muesli", [], "g", 750, 2.00],
+  ["pizza", ["pizzas", "frozen pizza", "frozen pizzas"], "each", 1, 2.50],
+
 
   // =========================================================
   // TINNED, JARRED & PULSES
@@ -2106,6 +2109,58 @@ const EXTRA_FOOD_ALIASES = {
   "mature cheese",
   "cheddar",
   "cheese for cooking"
+], "red pepper": [
+  "pepper",
+  "red peppers",
+  "bell pepper",
+  "bell peppers",
+  "sweet pepper",
+  "sweet peppers"
+],
+
+"brown onions": [
+  "onion",
+  "onions",
+  "red onion",
+  "red onions",
+  "white onion",
+  "white onions",
+  "yellow onion",
+  "yellow onions"
+],
+
+"garlic bulbs": [
+  "garlic",
+  "garlic bulb",
+  "garlic bulbs",
+  "whole garlic",
+  "whole garlic bulb"
+],
+
+"rice packets": [
+  "rice",
+  "packet rice",
+  "pack of rice",
+  "rice packet",
+  "rice packets",
+  "white rice",
+  "long grain rice"
+],
+
+"tuna tin": [
+  "tuna",
+  "tinned tuna",
+  "tin tuna",
+  "tuna tin",
+  "tuna tins",
+  "canned tuna"
+],
+
+"pizza": [
+  "pizzas",
+  "frozen pizza",
+  "frozen pizzas",
+  "cheese pizza"
 ]
 };
 
